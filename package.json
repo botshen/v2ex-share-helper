@@ -1,6 +1,6 @@
 {
-  "name": "v2-ex-share-helper",
-  "displayName": "V2 ex share helper",
+  "name": "v2ex-share-helper",
+  "displayName": "V2ex share helper",
   "version": "0.0.1",
   "description": "Easily share V2EX articles and comments with a single click",
   "author": "botshen",
@@ -25,7 +25,7 @@
   },
   "manifest": {
     "host_permissions": [
-      "https://*/*"
+      "*://*.v2ex.com/*"
     ]
   }
 }
