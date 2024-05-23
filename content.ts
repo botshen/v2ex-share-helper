@@ -1,9 +1,10 @@
-import type { PlasmoCSConfig } from "plasmo"
- 
+import type { PlasmoCSConfig } from "plasmo";
+
 export const config: PlasmoCSConfig = {
   matches: ["*://*.v2ex.com/t/*"],
   all_frames: true
-}
+};
+
 console.log(
   "You may find that having is not so pleasing a thing as wanting. This is not logical, but it is often true."
 );
@@ -56,17 +57,12 @@ if (wrapper) {
           const shareTextButton = document.createElement("a");
           shareTextButton.href = "#;";
           shareTextButton.className = "tb";
-          shareTextButton.textContent = "分享文字";
+          shareTextButton.textContent = "分享文章";
           shareTextButton.style.marginRight = "10px"; // 添加一些右边距使得按钮之间有间隔
 
           // 添加点击事件处理函数
           shareTextButton.addEventListener("click", () => {
-            const textToShare = "你身边大学专科的程序员多吗？";
-            navigator.clipboard.writeText(textToShare).then(() => {
-              alert("文字已复制到剪贴板！");
-            }).catch(err => {
-              console.error("无法复制文字：", err);
-            });
+            sharePostContent();
           });
 
           // 将新的按钮插入到操作按钮容器中
@@ -85,17 +81,12 @@ if (wrapper) {
           const shareTextButton = document.createElement("a");
           shareTextButton.href = "#;";
           shareTextButton.className = "tb";
-          shareTextButton.textContent = "分享文字";
+          shareTextButton.textContent = "分享文章";
           shareTextButton.style.marginRight = "10px"; // 添加一些右边距使得按钮之间有间隔
 
           // 添加点击事件处理函数
           shareTextButton.addEventListener("click", () => {
-            const textToShare = "你身边大学专科的程序员多吗？";
-            navigator.clipboard.writeText(textToShare).then(() => {
-              alert("文字已复制到剪贴板！");
-            }).catch(err => {
-              console.error("无法复制文字：", err);
-            });
+            sharePostContent();
           });
 
           // 将新的按钮插入到操作按钮容器中
@@ -131,3 +122,23 @@ style.textContent = `
     }
   `;
 document.head.append(style);
+
+// 分享帖子内容的函数
+function sharePostContent() {
+  console.log('开始分享帖子内容');
+  const postContentElement = document.querySelector(".topic_content");
+  if (!postContentElement) {
+    alert("未找到帖子内容！");
+    return;
+  }
+
+  // 提取帖子内容及其格式
+  const postContent = postContentElement.innerHTML;
+  console.log('postContent:', postContent);
+
+  // 创建新的标签页并传递内容
+  chrome.runtime.sendMessage({
+    action: "openNewTab",
+    data: postContent
+  });
+}

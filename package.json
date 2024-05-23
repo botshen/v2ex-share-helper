@@ -10,8 +10,11 @@
     "package": "plasmo package"
   },
   "dependencies": {
+    "html2canvas": "^1.4.1",
     "plasmo": "0.86.3",
     "react": "18.2.0",
+    "downloadjs": "^1.4.7",
+    "html-to-image": "^1.11.11",
     "react-dom": "18.2.0"
   },
   "devDependencies": {
@@ -26,6 +29,20 @@
   "manifest": {
     "host_permissions": [
       "*://*.v2ex.com/*"
+    ],
+    "permissions": [
+      "activeTab",
+      "tabs"
+    ],
+    "web_accessible_resources": [
+      {
+        "matches": [
+          "<all_urls>"
+        ],
+        "resources": [
+          "tabs/App.html"
+        ]
+      }
     ]
   }
 }
