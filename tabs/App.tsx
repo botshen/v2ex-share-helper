@@ -1,14 +1,22 @@
 import { useEffect, useState, type CSSProperties } from "react";
 import { toPng } from 'html-to-image';
 import download from 'downloadjs';
- 
+import '../style.css'
+
 export default function DeltaFlyerPage() {
   const [postContent, setPostContent] = useState<string>("");
+  const [title, setTitle] = useState<string>("");
+  const [author, setAuthor] = useState<string>("");
+  const [avatarUrl, setAvatarUrl] = useState<string>("");
 
   useEffect(() => {
     const handleMessage = (message: any) => {
       if (message.action === "showPostContent") {
-        setPostContent(message.data);
+        const { postContent, title, author, avatarUrl } = message.data;
+        setPostContent(postContent);
+        setTitle(title);
+        setAuthor(author);
+        setAvatarUrl(avatarUrl);
       }
     };
 
@@ -47,66 +55,102 @@ export default function DeltaFlyerPage() {
   };
 
   return (
-    <div style={styles.container as CSSProperties}>
-      <div id="post-content" style={styles.wrapper as CSSProperties}>
-        <div className="title" style={styles.title as CSSProperties}>喜欢的女同事要离职了怎么办？
-        </div>
-        <div style={styles.content as CSSProperties} dangerouslySetInnerHTML={{ __html: postContent }} />
-      </div>
+    <div style={styles.pageContainer}>
       <div style={styles.buttonContainer as CSSProperties}>
         <button style={styles.button as CSSProperties} onClick={copyImageToClipboard}>复制图片</button>
         <button style={styles.button as CSSProperties} onClick={downloadImage}>下载图片</button>
+      </div>
+      <div style={styles.container as CSSProperties} id="post-content">
+        <div style={styles.wrapper as CSSProperties}>
+          <div className="title" style={styles.title as CSSProperties}>{title}</div>
+          <div style={styles.authorContainer as CSSProperties}>
+            {avatarUrl && <img src={avatarUrl} alt="头像" style={styles.avatar as CSSProperties} />}
+            <span style={styles.author as CSSProperties}>{author}</span>
+          </div>
+          <div style={styles.content as CSSProperties} dangerouslySetInnerHTML={{ __html: postContent }} />
+        </div>
       </div>
     </div>
   );
 }
 
 const styles = {
-  wrapper: {
+  pageContainer: {
+    display: 'flex',
+    flexDirection: 'column' as 'column',
+    alignItems: 'center',
     padding: '20px',
+    backgroundColor: '#f5f5f5',
+    minHeight: '100vh',
+  },
+  wrapper: {
     backgroundColor: '#fff',
     borderRadius: '8px',
-     fontFamily: 'Arial, sans-serif'
-
+    fontFamily: 'Arial, sans-serif'
   },
   container: {
     padding: '20px',
     maxWidth: '406px',
-    margin: 'auto',
     backgroundColor: '#fff',
     borderRadius: '8px',
     boxShadow: '0 2px 10px rgba(0,0,0,0.1)',
-    fontFamily: 'Arial, sans-serif'
+    fontFamily: 'Arial, sans-serif',
+    marginTop: '60px',
   },
   title: {
-    fontSize: '22px', // 增大标题字体
+    fontSize: '24px', // 增大标题字体
     fontWeight: 'bold' as 'bold',
     color: '#333',
     backgroundColor: '#fff',
-
+  },
+  authorContainer: {
+    display: 'flex',
+    alignItems: 'center',
+    marginTop: '10px',
+  },
+  avatar: {
+    width: '40px',
+    height: '40px',
+    borderRadius: '50%',
+    marginRight: '10px',
+  },
+  author: {
+    fontSize: '16px',
+    color: '#555',
   },
   content: {
-    fontSize: '16px', // 增大内容字体
+    fontSize: '18px', // 增大内容字体
     lineHeight: '1.8',
     color: '#444',
     backgroundColor: '#fff',
-    wordBreak: 'break-word' as 'break-word'
+    wordBreak: 'break-word' as 'break-word',
   },
   buttonContainer: {
+    position: 'fixed',
+    top: '0',
+    left: '0',
+    right: '0',
     display: 'flex',
-    justifyContent: 'space-between',
-    marginTop: '20px'
+    justifyContent: 'center',
+    padding: '10px 0',
+    backgroundColor: 'rgba(245, 245, 245, 0.9)',
+    boxShadow: '0 2px 10px rgba(0,0,0,0.1)',
+    zIndex: 1000,
+    transition: 'all 0.3s ease-in-out',
   },
   button: {
-    flex: '1',
-    padding: '12px 15px',
-    margin: '0 5px',
-    fontSize: '20px', // 增大按钮字体
+    padding: '10px 15px',
+    margin: '0 10px',
+    fontSize: '16px', // 调整按钮字体
     color: '#fff',
     backgroundColor: '#007BFF',
     border: 'none',
     borderRadius: '5px',
     cursor: 'pointer',
-    textAlign: 'center' as 'center'
+    textAlign: 'center' as 'center',
+    transition: 'background-color 0.3s ease',
+  },
+  buttonHover: {
+    backgroundColor: '#0056b3', // 按钮悬停时的背景色
   }
 };

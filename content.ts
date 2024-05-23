@@ -126,19 +126,38 @@ document.head.append(style);
 // 分享帖子内容的函数
 function sharePostContent() {
   console.log('开始分享帖子内容');
+
+  // 获取帖子内容
   const postContentElement = document.querySelector(".topic_content");
   if (!postContentElement) {
     alert("未找到帖子内容！");
     return;
   }
-
-  // 提取帖子内容及其格式
   const postContent = postContentElement.innerHTML;
-  console.log('postContent:', postContent);
+
+  // 获取标题
+  const titleElement = document.querySelector("#Wrapper .content #Main .box .header h1");
+  const title = titleElement ? titleElement.textContent : "未找到标题";
+  console.log('title',title)
+
+  // 获取作者名字
+  const authorElement = document.querySelector("#Wrapper .content #Main .box .header small a");
+  const author = authorElement ? authorElement.textContent : "未找到作者";
+  console.log('author',author)
+
+  // 获取头像 URL
+  const avatarElement = document.querySelector("#Wrapper .content #Main .box .header img") as HTMLImageElement;
+  const avatarUrl = avatarElement ? avatarElement.src : "未找到头像";
+  console.log('avatarUrl',avatarUrl)
 
   // 创建新的标签页并传递内容
   chrome.runtime.sendMessage({
     action: "openNewTab",
-    data: postContent
+    data: {
+      postContent,
+      title,
+      author,
+      avatarUrl
+    }
   });
 }
