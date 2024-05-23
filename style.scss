@@ -1,0 +1,41 @@
+body {
+  margin: 0;
+  padding: 0;
+}
+
+.xxx {
+  background-image: url(https://www.v2ex.com/static/img/shadow_light.png), url(https://static.v2ex.com/bgs/pixels.png);
+  background-position: 0 0, 0 0;
+  background-repeat: repeat-x, repeat;
+}
+
+h1 {
+  font-size: 24px;
+}
+
+h2 {
+  font-size: 20px;
+}
+
+pre {
+  white-space: pre-wrap;
+  /* 保留空白符序列，同时允许自动换行 */
+  word-wrap: break-word;
+  /* 允许长单词在必要时换行 */
+  overflow-wrap: break-word;
+  /* 允许长单词在必要时换行 */
+}
+
+code {
+  white-space: pre-wrap;
+  /* 保留空白符序列，同时允许自动换行 */
+  word-wrap: break-word;
+  /* 允许长单词在必要时换行 */
+  overflow-wrap: break-word;
+  /* 允许长单词在必要时换行 */
+}
+
+button:hover {
+  background-color: #0056b3;
+  /* 按钮悬停时的背景色 */
+}

@@ -138,18 +138,20 @@ function sharePostContent() {
   // 获取标题
   const titleElement = document.querySelector("#Wrapper .content #Main .box .header h1");
   const title = titleElement ? titleElement.textContent : "未找到标题";
-  console.log('title',title)
+  console.log('title', title)
 
   // 获取作者名字
   const authorElement = document.querySelector("#Wrapper .content #Main .box .header small a");
   const author = authorElement ? authorElement.textContent : "未找到作者";
-  console.log('author',author)
+  console.log('author', author)
 
   // 获取头像 URL
   const avatarElement = document.querySelector("#Wrapper .content #Main .box .header img") as HTMLImageElement;
   const avatarUrl = avatarElement ? avatarElement.src : "未找到头像";
-  console.log('avatarUrl',avatarUrl)
-
+  console.log('avatarUrl', avatarUrl)
+  // 示例：获取并打印所有勾选的评论信息
+  const checkedComments = collectCheckedComments();
+  console.log('Checked Comments:', checkedComments);
   // 创建新的标签页并传递内容
   chrome.runtime.sendMessage({
     action: "openNewTab",
@@ -157,7 +159,37 @@ function sharePostContent() {
       postContent,
       title,
       author,
-      avatarUrl
+      avatarUrl,
+      comments: checkedComments
     }
   });
 }
+
+// 收集勾选的评论信息
+function collectCheckedComments() {
+  const checkedComments = [];
+  comments.forEach(comment => {
+    const checkbox = comment.querySelector(".custom-checkbox") as HTMLInputElement;
+    if (checkbox && checkbox.checked) {
+      const commentElement = comment.querySelector("table") as HTMLElement;
+      if (commentElement) {
+        const avatarElement = commentElement.querySelector("img.avatar") as HTMLImageElement;
+        const authorElement = commentElement.querySelector("strong a.dark") as HTMLElement;
+        const contentElement = commentElement.querySelector(".reply_content") as HTMLElement;
+
+        const avatarUrl = avatarElement ? avatarElement.src : "未找到头像";
+        const author = authorElement ? authorElement.textContent : "未找到作者";
+        const content = contentElement ? contentElement.textContent : "未找到评论内容";
+
+        checkedComments.push({
+          avatarUrl,
+          author,
+          content
+        });
+      }
+    }
+  });
+  return checkedComments;
+}
+
+
