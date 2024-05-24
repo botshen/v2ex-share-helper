@@ -15,22 +15,16 @@ const toastStyles = {
   animation: 'zoomIn 0.5s ease, fadeOut 1.5s ease 3s forwards',
 };
 
-const toastCss = `
-@keyframes zoomIn {
-  from { opacity: 0; transform: scale(0.5); }
-  to { opacity: 1; transform: scale(1); }
-}
-  
-@keyframes fadeOut {
-  from { opacity: 1; }
-  to { opacity: 0; }
-}
-`;
 interface Comment {
   avatarUrl: string;
   author: string;
   content: string;
 }
+
+interface Postscript {
+  content: string;
+}
+
 
 export default function DeltaFlyerPage() {
   const [postContent, setPostContent] = useState<string>("");
@@ -39,18 +33,22 @@ export default function DeltaFlyerPage() {
   const [avatarUrl, setAvatarUrl] = useState<string>("");
   const [randomBgColor, setRandomBgColor] = useState<string>("");
   const [comments, setComments] = useState<Comment[]>([]);
+  const [postscripts, setPostscripts] = useState<Postscript[]>([]);
+
 
   useEffect(() => {
     const handleMessage = (message: any) => {
       if (message.action === "showPostContent") {
-        const { postContent, title, author, avatarUrl, comments } = message.data;
+        const { postContent, title, author, avatarUrl, comments, postscripts } = message.data;
         setPostContent(postContent);
         setTitle(title);
         setAuthor(author);
         setAvatarUrl(avatarUrl);
         setComments(comments);
+        setPostscripts(postscripts); // 添加这行代码
       }
     };
+
 
     chrome.runtime.onMessage.addListener(handleMessage);
 
@@ -112,6 +110,16 @@ export default function DeltaFlyerPage() {
                 <span style={styles.author as CSSProperties}>{author}</span>
               </div>
               <div style={styles.content as CSSProperties} dangerouslySetInnerHTML={{ __html: postContent }} />
+
+              {postscripts.length > 0 && (
+                <div style={styles.postscriptSection as CSSProperties}>
+                  <h3 style={styles.postscriptTitle as CSSProperties}>附言</h3>
+                  {postscripts.map((postscript, index) => (
+                    <div key={index} style={styles.postscript as CSSProperties} dangerouslySetInnerHTML={{ __html: postscript.content }} />
+                  ))}
+                </div>
+              )}
+
               {comments.length > 0 && (
                 <div style={styles.commentsSection as CSSProperties}>
                   <h3 style={styles.commentsTitle as CSSProperties}>精选评论</h3>
@@ -135,6 +143,7 @@ export default function DeltaFlyerPage() {
       }} />
     </div>
   );
+
 }
 
 const styles = {
@@ -248,5 +257,23 @@ const styles = {
     fontSize: '14px',
     color: '#555',
     wordBreak: 'break-word' as 'break-word',
+  },
+  postscriptSection: {
+    marginTop: '20px',
+  },
+  postscriptTitle: {
+    fontSize: '20px',
+    fontWeight: 'bold' as 'bold',
+    color: '#333',
+    marginBottom: '10px',
+  },
+  postscript: {
+    fontSize: '16px',
+    lineHeight: '1.6',
+    color: '#555',
+    backgroundColor: '#f9f9f9',
+    padding: '10px',
+    borderRadius: '8px',
+    marginBottom: '10px',
   },
 };

@@ -129,9 +129,15 @@ function sharePostContent() {
   const avatarElement = document.querySelector("#Wrapper .content #Main .box .header img") as HTMLImageElement;
   const avatarUrl = avatarElement ? avatarElement.src : "未找到头像";
   console.log('avatarUrl', avatarUrl)
+   // 获取附言内容
+   const postscriptElements = document.querySelectorAll("#Wrapper .content #Main .box .subtle .topic_content");
+   const postscripts = Array.from(postscriptElements).map(element => {
+     return { content: element.innerHTML };
+   });
   // 示例：获取并打印所有勾选的评论信息
   const checkedComments = collectCheckedComments();
   console.log('Checked Comments:', checkedComments);
+  console.log('postscripts',postscripts)
   // 创建新的标签页并传递内容
   chrome.runtime.sendMessage({
     action: "openNewTab",
@@ -140,7 +146,8 @@ function sharePostContent() {
       title,
       author,
       avatarUrl,
-      comments: checkedComments
+      comments: checkedComments,
+      postscripts
     }
   });
 }
@@ -177,16 +184,16 @@ function collectCheckedComments() {
       if (commentElement) {
         const avatarElement = commentElement.querySelector("img.avatar") as HTMLImageElement;
         const authorElement = commentElement.querySelector("strong a.dark") as HTMLElement;
-        const contentElement = commentElement.querySelector(".reply_content") as HTMLElement;
-
-        const avatarUrl = avatarElement ? avatarElement.src : "未找到头像";
+        const contentElement = commentElement.querySelector(".reply_content") as HTMLElement; 
+         const avatarUrl = avatarElement ? avatarElement.src : "未找到头像";
         const author = authorElement ? authorElement.textContent : "未找到作者";
         const content = contentElement ? contentElement.innerHTML : "未找到评论内容"; // 获取HTML内容
 
         checkedComments.push({
           avatarUrl,
           author,
-          content
+          content,
+           
         });
       }
     }
