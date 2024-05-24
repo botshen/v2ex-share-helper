@@ -59,6 +59,7 @@ if (wrapper) {
           shareTextButton.className = "tb";
           shareTextButton.textContent = "分享文章";
           shareTextButton.style.marginRight = "10px"; // 添加一些右边距使得按钮之间有间隔
+ 
 
           // 添加点击事件处理函数
           shareTextButton.addEventListener("click", () => {
@@ -83,6 +84,7 @@ if (wrapper) {
           shareTextButton.className = "tb";
           shareTextButton.textContent = "分享文章";
           shareTextButton.style.marginRight = "10px"; // 添加一些右边距使得按钮之间有间隔
+          shareTextButton.style.marginLeft = "10px"; // 添加一些右边距使得按钮之间有间隔
 
           // 添加点击事件处理函数
           shareTextButton.addEventListener("click", () => {

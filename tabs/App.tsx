@@ -1,8 +1,13 @@
 import { useEffect, useState, type CSSProperties } from "react";
 import { toPng } from 'html-to-image';
 import download from 'downloadjs';
-import '../style.scss'
- 
+import '../style.scss';
+
+interface Comment {
+  avatarUrl: string;
+  author: string;
+  content: string;
+}
 
 export default function DeltaFlyerPage() {
   const [postContent, setPostContent] = useState<string>("");
@@ -10,15 +15,17 @@ export default function DeltaFlyerPage() {
   const [author, setAuthor] = useState<string>("");
   const [avatarUrl, setAvatarUrl] = useState<string>("");
   const [randomBgColor, setRandomBgColor] = useState<string>("");
+  const [comments, setComments] = useState<Comment[]>([]);
 
   useEffect(() => {
     const handleMessage = (message: any) => {
       if (message.action === "showPostContent") {
-        const { postContent, title, author, avatarUrl } = message.data;
+        const { postContent, title, author, avatarUrl, comments } = message.data;
         setPostContent(postContent);
         setTitle(title);
         setAuthor(author);
         setAvatarUrl(avatarUrl);
+        setComments(comments);
       }
     };
 
@@ -80,6 +87,20 @@ export default function DeltaFlyerPage() {
             <span style={styles.author as CSSProperties}>{author}</span>
           </div>
           <div style={styles.content as CSSProperties} dangerouslySetInnerHTML={{ __html: postContent }} />
+          {comments.length > 0 && (
+            <div style={styles.commentsSection as CSSProperties}>
+              <h3 style={styles.commentsTitle as CSSProperties}>精选评论</h3>
+              {comments.map((comment, index) => (
+                <div key={index} style={styles.comment as CSSProperties}>
+                  <img src={comment.avatarUrl} alt="头像" style={styles.commentAvatar as CSSProperties} />
+                  <div style={styles.commentContent as CSSProperties}>
+                    <span style={styles.commentAuthor as CSSProperties}>{comment.author}</span>
+                    <p style={styles.commentText as CSSProperties}>{comment.content}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
       </div>
     </div>
@@ -137,17 +158,15 @@ const styles = {
   },
   buttonContainer: {
     position: 'fixed',
-    top: '0',
-    left: '65%',
+    top: '20px',
+    left: '67%',
     display: 'flex',
     justifyContent: 'center',
     padding: '10px',
     zIndex: 1000,
     backgroundColor: '#fff',
     transition: 'all 0.3s ease-in-out',
-    borderRadius:'8px'
-
-
+    borderRadius: '8px'
   },
   button: {
     padding: '10px 15px',
@@ -161,5 +180,42 @@ const styles = {
     textAlign: 'center' as 'center',
     transition: 'background-color 0.3s ease',
   },
-}
-
+  commentsSection: {
+    marginTop: '20px',
+  },
+  commentsTitle: {
+    fontSize: '20px',
+    fontWeight: 'bold' as 'bold',
+    color: '#333',
+    marginBottom: '10px',
+  },
+  comment: {
+    display: 'flex',
+    alignItems: 'center',
+    marginBottom: '15px',
+  },
+  commentAvatar: {
+    width: '30px',
+    height: '30px',
+    borderRadius: '50%',
+    marginRight: '10px',
+    border:'1px solid #838383'
+  },
+  commentContent: {
+    backgroundColor: '#f9f9f9',
+    borderRadius: '8px',
+    padding: '10px',
+    flex: 1,
+  },
+  commentAuthor: {
+    fontSize: '14px',
+    fontWeight: 'bold' as 'bold',
+    color: '#555',
+    marginBottom: '5px',
+    marginLeft: '8px',
+  },
+  commentText: {
+    fontSize: '14px',
+    color: '#555',
+  },
+};
