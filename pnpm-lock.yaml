@@ -5,6 +5,9 @@ settings:
   excludeLinksFromLockfile: false
 
 dependencies:
+  '@hirohe/react-watermark':
+    specifier: ^0.5.0
+    version: 0.5.0(react-dom@18.2.0)(react@18.2.0)
   downloadjs:
     specifier: ^1.4.7
     version: 1.4.7
@@ -437,6 +440,16 @@ packages:
     engines: {node: '>=12'}
     dependencies:
       cross-spawn: 7.0.3
+    dev: false
+
+  /@hirohe/react-watermark@0.5.0(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-VB43IxKVTveUk7bjBZuG+0AYyyPx+GuMQ/0jMJZ8YIMgar5sZW3lPoegA3lCLOjIKj/TQs25fxU9aZpj2t70Dg==}
+    peerDependencies:
+      react: '>=16.8.0'
+      react-dom: '>=16.8.0'
+    dependencies:
+      react: 18.2.0
+      react-dom: 18.2.0(react@18.2.0)
     dev: false
 
   /@ianvs/prettier-plugin-sort-imports@4.1.1(prettier@3.2.4):

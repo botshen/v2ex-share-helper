@@ -2,6 +2,7 @@ import { useEffect, useState, type CSSProperties } from "react";
 import { toPng } from 'html-to-image';
 import download from 'downloadjs';
 import '../style.scss';
+import { Watermark } from '@hirohe/react-watermark';
 
 interface Comment {
   avatarUrl: string;
@@ -79,30 +80,32 @@ export default function DeltaFlyerPage() {
         <button style={styles.button as CSSProperties} onClick={copyImageToClipboard}>复制图片</button>
         <button style={styles.button as CSSProperties} onClick={downloadImage}>下载图片</button>
       </div>
-      <div style={styles.container as CSSProperties} id="post-content">
-        <div style={styles.wrapper as CSSProperties}>
-          <div className="title" style={styles.title as CSSProperties}>{title}</div>
-          <div style={styles.authorContainer as CSSProperties}>
-            {avatarUrl && <img src={avatarUrl} alt="头像" style={styles.avatar as CSSProperties} />}
-            <span style={styles.author as CSSProperties}>{author}</span>
-          </div>
-          <div style={styles.content as CSSProperties} dangerouslySetInnerHTML={{ __html: postContent }} />
-          {comments.length > 0 && (
-            <div style={styles.commentsSection as CSSProperties}>
-              <h3 style={styles.commentsTitle as CSSProperties}>精选评论</h3>
-              {comments.map((comment, index) => (
-                <div key={index} style={styles.comment as CSSProperties}>
-                  <img src={comment.avatarUrl} alt="头像" style={styles.commentAvatar as CSSProperties} />
-                  <div style={styles.commentContent as CSSProperties}>
-                    <span style={styles.commentAuthor as CSSProperties}>{comment.author}</span>
-                    <p style={styles.commentText as CSSProperties}>{comment.content}</p>
-                  </div>
-                </div>
-              ))}
+      <Watermark text="V2ex" gutter={16} multiline>
+        <div style={styles.container as CSSProperties} id="post-content">
+          <div style={styles.wrapper as CSSProperties}>
+            <div className="title" style={styles.title as CSSProperties}>{title}</div>
+            <div style={styles.authorContainer as CSSProperties}>
+              {avatarUrl && <img src={avatarUrl} alt="头像" style={styles.avatar as CSSProperties} />}
+              <span style={styles.author as CSSProperties}>{author}</span>
             </div>
-          )}
+            <div style={styles.content as CSSProperties} dangerouslySetInnerHTML={{ __html: postContent }} />
+            {comments.length > 0 && (
+              <div style={styles.commentsSection as CSSProperties}>
+                <h3 style={styles.commentsTitle as CSSProperties}>精选评论</h3>
+                {comments.map((comment, index) => (
+                  <div key={index} style={styles.comment as CSSProperties}>
+                    <img src={comment.avatarUrl} alt="头像" style={styles.commentAvatar as CSSProperties} />
+                    <div style={styles.commentContent as CSSProperties}>
+                      <span style={styles.commentAuthor as CSSProperties}>{comment.author}</span>
+                      <p style={styles.commentText as CSSProperties}>{comment.content}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
         </div>
-      </div>
+      </Watermark>
     </div>
   );
 }
@@ -199,7 +202,7 @@ const styles = {
     height: '30px',
     borderRadius: '50%',
     marginRight: '10px',
-    border:'1px solid #838383'
+    border: '1px solid #838383'
   },
   commentContent: {
     backgroundColor: '#f9f9f9',
