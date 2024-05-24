@@ -15,9 +15,10 @@ const comments = document.querySelectorAll(".cell[data-floor-number]"); // 选�
 comments.forEach(comment => {
   const commentElement = comment as HTMLElement;
 
-  // 设置 .cell 元素为 flex 布局
-  commentElement.style.display = "flex";
-  commentElement.style.alignItems = "center";
+  // 创建一个容器用于包裹勾选框和评论内容
+  const wrapperDiv = document.createElement("div");
+  wrapperDiv.style.display = "flex"; // 使用flexbox布局
+  // wrapperDiv.style.alignItems = "center"; // 使用flexbox的align-items属性实现居中对齐
 
   // 创建勾选框元素
   const checkbox = document.createElement("input");
@@ -25,8 +26,16 @@ comments.forEach(comment => {
   checkbox.style.marginRight = "10px"; // 添加一些右边距使得勾选框和评论内容之间有间隔
   checkbox.classList.add("custom-checkbox"); // 添加自定义 CSS 类
 
-  // 将勾选框插入到每条评论前面
-  commentElement.insertBefore(checkbox, commentElement.firstChild);
+  // 将勾选框插入到新的容器中
+  wrapperDiv.appendChild(checkbox);
+
+  // 将原评论内容移至容器中
+  while (commentElement.firstChild) {
+    wrapperDiv.appendChild(commentElement.firstChild);
+  }
+
+  // 将新的容器插入到原评论元素中
+  commentElement.appendChild(wrapperDiv);
 });
 
 // 查找 body > #Wrapper > .content > #Main > 第一个 .box > .box
@@ -37,9 +46,9 @@ if (wrapper) {
     const main = content.querySelector("#Main");
     if (main) {
       const firstBox = main.querySelector(".box") as HTMLElement;
-      console.log('firstBox', firstBox);
       if (firstBox && firstBox.classList.contains("box")) {
         let topicButtons = firstBox.querySelector(".topic_buttons") as HTMLElement;
+        console.log('topicButtons', topicButtons)
 
         if (!topicButtons) {
           // 如果不存在 .topic_buttons 元素，则创建一个新的
@@ -147,7 +156,7 @@ function insertShareButton(container: HTMLElement) {
   const shareTextButton = document.createElement("a");
   shareTextButton.href = "#;";
   shareTextButton.className = "tb share-button";
-  shareTextButton.textContent = "分享";
+  shareTextButton.textContent = "分享帖子";
   shareTextButton.style.marginRight = "10px"; // 添加一些右边距使得按钮之间有间隔
   shareTextButton.style.marginLeft = "10px"; // 添加一些右边距使得按钮之间有间隔
 

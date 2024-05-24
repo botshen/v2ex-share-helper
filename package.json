@@ -1,7 +1,7 @@
 {
   "name": "v2ex-share-helper",
   "displayName": "V2ex share helper",
-  "version": "0.0.1",
+  "version": "0.0.3",
   "description": "Easily share V2EX articles and comments with a single click",
   "author": "botshen",
   "scripts": {

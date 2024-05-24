@@ -9,7 +9,7 @@ body {
   background-repeat: repeat-x, repeat;
 }
 
-p{
+p {
   margin: 8px;
 }
 
@@ -42,4 +42,8 @@ code {
 button:hover {
   background-color: #0056b3;
   /* 按钮悬停时的背景色 */
+}
+
+img {
+  max-width: 100%;
 }
