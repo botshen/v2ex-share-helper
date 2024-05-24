@@ -67,7 +67,7 @@ export default function DeltaFlyerPage() {
     if (element) {
       try {
         const dataUrl = await toPng(element);
-        download(dataUrl, 'post-content.png');
+        download(dataUrl, 'v2ex.png');
       } catch (error) {
         console.error('下载图片失败:', error);
       }
@@ -80,32 +80,35 @@ export default function DeltaFlyerPage() {
         <button style={styles.button as CSSProperties} onClick={copyImageToClipboard}>复制图片</button>
         <button style={styles.button as CSSProperties} onClick={downloadImage}>下载图片</button>
       </div>
-      <Watermark text="V2ex" gutter={16} multiline>
-        <div style={styles.container as CSSProperties} id="post-content">
-          <div style={styles.wrapper as CSSProperties}>
-            <div className="title" style={styles.title as CSSProperties}>{title}</div>
-            <div style={styles.authorContainer as CSSProperties}>
-              {avatarUrl && <img src={avatarUrl} alt="头像" style={styles.avatar as CSSProperties} />}
-              <span style={styles.author as CSSProperties}>{author}</span>
-            </div>
-            <div style={styles.content as CSSProperties} dangerouslySetInnerHTML={{ __html: postContent }} />
-            {comments.length > 0 && (
-              <div style={styles.commentsSection as CSSProperties}>
-                <h3 style={styles.commentsTitle as CSSProperties}>精选评论</h3>
-                {comments.map((comment, index) => (
-                  <div key={index} style={styles.comment as CSSProperties}>
-                    <img src={comment.avatarUrl} alt="头像" style={styles.commentAvatar as CSSProperties} />
-                    <div style={styles.commentContent as CSSProperties}>
-                      <span style={styles.commentAuthor as CSSProperties}>{comment.author}</span>
-                      <p style={styles.commentText as CSSProperties}>{comment.content}</p>
-                    </div>
-                  </div>
-                ))}
+      <div id="post-content">
+        <Watermark text="V2ex" gutter={16} multiline >
+          <div style={styles.container as CSSProperties} >
+            <div style={styles.wrapper as CSSProperties}>
+              <div className="title" style={styles.title as CSSProperties}>{title}</div>
+              <div style={styles.authorContainer as CSSProperties}>
+                {avatarUrl && <img src={avatarUrl} alt="头像" style={styles.avatar as CSSProperties} />}
+                <span style={styles.author as CSSProperties}>{author}</span>
               </div>
-            )}
+              <div style={styles.content as CSSProperties} dangerouslySetInnerHTML={{ __html: postContent }} />
+              {comments.length > 0 && (
+                <div style={styles.commentsSection as CSSProperties}>
+                  <h3 style={styles.commentsTitle as CSSProperties}>精选评论</h3>
+                  {comments.map((comment, index) => (
+                    <div key={index} style={styles.comment as CSSProperties}>
+                      <img src={comment.avatarUrl} alt="头像" style={styles.commentAvatar as CSSProperties} />
+                      <div style={styles.commentContent as CSSProperties}>
+                        <span style={styles.commentAuthor as CSSProperties}>{comment.author}</span>
+                        <p style={styles.commentText as CSSProperties}>{comment.content}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
           </div>
-        </div>
-      </Watermark>
+        </Watermark>
+      </div>
+
     </div>
   );
 }

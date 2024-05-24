@@ -158,7 +158,7 @@ function insertShareButton(container: HTMLElement) {
   const shareTextButton = document.createElement("a");
   shareTextButton.href = "#;";
   shareTextButton.className = "tb share-button";
-  shareTextButton.textContent = "分享文章";
+  shareTextButton.textContent = "分享";
   shareTextButton.style.marginRight = "10px"; // 添加一些右边距使得按钮之间有间隔
   shareTextButton.style.marginLeft = "10px"; // 添加一些右边距使得按钮之间有间隔
 
