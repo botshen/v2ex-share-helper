@@ -168,7 +168,6 @@ function insertShareButton(container: HTMLElement) {
   // 将新的按钮插入到操作按钮容器中
   container.appendChild(shareTextButton);
 }
-// 收集勾选的评论信息
 function collectCheckedComments() {
   const checkedComments = [];
   comments.forEach(comment => {
@@ -182,7 +181,7 @@ function collectCheckedComments() {
 
         const avatarUrl = avatarElement ? avatarElement.src : "未找到头像";
         const author = authorElement ? authorElement.textContent : "未找到作者";
-        const content = contentElement ? contentElement.textContent : "未找到评论内容";
+        const content = contentElement ? contentElement.innerHTML : "未找到评论内容"; // 获取HTML内容
 
         checkedComments.push({
           avatarUrl,

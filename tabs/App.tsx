@@ -3,7 +3,29 @@ import { toPng } from 'html-to-image';
 import download from 'downloadjs';
 import '../style.scss';
 import { Watermark } from '@hirohe/react-watermark';
+import toast, { Toaster } from 'react-hot-toast';
+const notify = () => toast('已复制到剪贴板📋', { icon: '✅' });
+const toastStyles = {
+  borderRadius: '10px',
+  background: '#333',
+  color: '#fff',
+  padding: '14px 18px',
+  boxShadow: '0 4px 10px rgba(0, 0, 0, 0.1)',
+  fontSize: '18px',
+  animation: 'zoomIn 0.5s ease, fadeOut 1.5s ease 3s forwards',
+};
 
+const toastCss = `
+@keyframes zoomIn {
+  from { opacity: 0; transform: scale(0.5); }
+  to { opacity: 1; transform: scale(1); }
+}
+  
+@keyframes fadeOut {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+`;
 interface Comment {
   avatarUrl: string;
   author: string;
@@ -55,7 +77,7 @@ export default function DeltaFlyerPage() {
         const blob = await (await fetch(dataUrl)).blob();
         const item = new ClipboardItem({ "image/png": blob });
         await navigator.clipboard.write([item]);
-        alert("图片已复制到剪贴板！");
+        notify()
       } catch (error) {
         console.error('复制图片失败:', error);
       }
@@ -81,8 +103,8 @@ export default function DeltaFlyerPage() {
         <button style={styles.button as CSSProperties} onClick={downloadImage}>下载图片</button>
       </div>
       <div id="post-content">
-        <Watermark text="V2ex" gutter={16} multiline >
-          <div style={styles.container as CSSProperties} >
+        <Watermark text="V2ex" gutter={16} multiline>
+          <div style={styles.container as CSSProperties}>
             <div style={styles.wrapper as CSSProperties}>
               <div className="title" style={styles.title as CSSProperties}>{title}</div>
               <div style={styles.authorContainer as CSSProperties}>
@@ -98,7 +120,7 @@ export default function DeltaFlyerPage() {
                       <img src={comment.avatarUrl} alt="头像" style={styles.commentAvatar as CSSProperties} />
                       <div style={styles.commentContent as CSSProperties}>
                         <span style={styles.commentAuthor as CSSProperties}>{comment.author}</span>
-                        <p style={styles.commentText as CSSProperties}>{comment.content}</p>
+                        <div style={styles.commentText as CSSProperties} dangerouslySetInnerHTML={{ __html: comment.content }} />
                       </div>
                     </div>
                   ))}
@@ -108,7 +130,9 @@ export default function DeltaFlyerPage() {
           </div>
         </Watermark>
       </div>
-
+      <Toaster toastOptions={{
+        style: toastStyles,
+      }} />
     </div>
   );
 }
@@ -223,5 +247,6 @@ const styles = {
   commentText: {
     fontSize: '14px',
     color: '#555',
+    wordBreak: 'break-word' as 'break-word',
   },
 };
