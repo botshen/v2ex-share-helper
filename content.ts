@@ -42,9 +42,22 @@ if (wrapper) {
         const lastCell = firstBox.querySelector(".cell");
         let nextSibling = lastCell ? lastCell.nextElementSibling : null;
         console.log('nextSibling', nextSibling);
-        if (!nextSibling || !nextSibling.classList.contains("topic_buttons")) {
-          // 如果没有 .topic_buttons 元素，则创建一个新的
-          const topicButtons = document.createElement("div");
+
+        // 新增判断 .subtle 节点的逻辑
+        let insertAfterElement = lastCell;
+        if (nextSibling && nextSibling.classList.contains("subtle")) {
+          insertAfterElement = nextSibling;
+          nextSibling = nextSibling.nextElementSibling;
+        }
+
+        // 判断是否存在 .topic_buttons 元素
+        let topicButtons = nextSibling && nextSibling.classList.contains("topic_buttons")
+          ? nextSibling as HTMLElement
+          : null;
+
+        if (!topicButtons) {
+          // 如果不存在 .topic_buttons 元素，则创建一个新的
+          topicButtons = document.createElement("div");
           topicButtons.className = "topic_buttons";
           topicButtons.style.padding = "5px";
           topicButtons.style.fontSize = "14px";
@@ -53,47 +66,14 @@ if (wrapper) {
           topicButtons.style.borderRadius = "0 0 3px 3px";
           topicButtons.style.textAlign = "left";
 
-          // 创建新的分享文字按钮
-          const shareTextButton = document.createElement("a");
-          shareTextButton.href = "#;";
-          shareTextButton.className = "tb";
-          shareTextButton.textContent = "分享文章";
-          shareTextButton.style.marginRight = "10px"; // 添加一些右边距使得按钮之间有间隔
- 
-
-          // 添加点击事件处理函数
-          shareTextButton.addEventListener("click", () => {
-            sharePostContent();
-          });
-
-          // 将新的按钮插入到操作按钮容器中
-          topicButtons.appendChild(shareTextButton);
-
-          // 将新的 .topic_buttons 元素插入到 .cell 元素之后
-          if (lastCell) {
-            lastCell.insertAdjacentElement("afterend", topicButtons);
+          // 将新的 .topic_buttons 元素插入到指定元素之后
+          if (insertAfterElement) {
+            insertAfterElement.insertAdjacentElement("afterend", topicButtons);
           }
-
-        } else {
-          // 如果存在 .topic_buttons 元素，则按照原逻辑处理
-          const topicButtons = nextSibling as HTMLElement;
-
-          // 创建新的分享文字按钮
-          const shareTextButton = document.createElement("a");
-          shareTextButton.href = "#;";
-          shareTextButton.className = "tb";
-          shareTextButton.textContent = "分享文章";
-          shareTextButton.style.marginRight = "10px"; // 添加一些右边距使得按钮之间有间隔
-          shareTextButton.style.marginLeft = "10px"; // 添加一些右边距使得按钮之间有间隔
-
-          // 添加点击事件处理函数
-          shareTextButton.addEventListener("click", () => {
-            sharePostContent();
-          });
-
-          // 将新的按钮插入到操作按钮容器中
-          topicButtons.appendChild(shareTextButton);
         }
+
+        // 创建并插入分享文字按钮
+        insertShareButton(topicButtons);
       }
     }
   }
@@ -167,6 +147,29 @@ function sharePostContent() {
   });
 }
 
+// 插入分享按钮的函数
+function insertShareButton(container: HTMLElement) {
+  // 检查是否已经存在分享按钮
+  if (container.querySelector(".tb.share-button")) {
+    return;
+  }
+
+  // 创建新的分享文字按钮
+  const shareTextButton = document.createElement("a");
+  shareTextButton.href = "#;";
+  shareTextButton.className = "tb share-button";
+  shareTextButton.textContent = "分享文章";
+  shareTextButton.style.marginRight = "10px"; // 添加一些右边距使得按钮之间有间隔
+  shareTextButton.style.marginLeft = "10px"; // 添加一些右边距使得按钮之间有间隔
+
+  // 添加点击事件处理函数
+  shareTextButton.addEventListener("click", () => {
+    sharePostContent();
+  });
+
+  // 将新的按钮插入到操作按钮容器中
+  container.appendChild(shareTextButton);
+}
 // 收集勾选的评论信息
 function collectCheckedComments() {
   const checkedComments = [];
