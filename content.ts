@@ -39,21 +39,7 @@ if (wrapper) {
       const firstBox = main.querySelector(".box") as HTMLElement;
       console.log('firstBox', firstBox);
       if (firstBox && firstBox.classList.contains("box")) {
-        const lastCell = firstBox.querySelector(".cell");
-        let nextSibling = lastCell ? lastCell.nextElementSibling : null;
-        console.log('nextSibling', nextSibling);
-
-        // 新增判断 .subtle 节点的逻辑
-        let insertAfterElement = lastCell;
-        if (nextSibling && nextSibling.classList.contains("subtle")) {
-          insertAfterElement = nextSibling;
-          nextSibling = nextSibling.nextElementSibling;
-        }
-
-        // 判断是否存在 .topic_buttons 元素
-        let topicButtons = nextSibling && nextSibling.classList.contains("topic_buttons")
-          ? nextSibling as HTMLElement
-          : null;
+        let topicButtons = firstBox.querySelector(".topic_buttons") as HTMLElement;
 
         if (!topicButtons) {
           // 如果不存在 .topic_buttons 元素，则创建一个新的
@@ -66,9 +52,12 @@ if (wrapper) {
           topicButtons.style.borderRadius = "0 0 3px 3px";
           topicButtons.style.textAlign = "left";
 
-          // 将新的 .topic_buttons 元素插入到指定元素之后
-          if (insertAfterElement) {
-            insertAfterElement.insertAdjacentElement("afterend", topicButtons);
+          // 将新的 .topic_buttons 元素插入到 .box 的最后一项之后
+          const lastCell = firstBox.lastElementChild;
+          if (lastCell) {
+            lastCell.insertAdjacentElement("afterend", topicButtons);
+          } else {
+            firstBox.appendChild(topicButtons);
           }
         }
 
