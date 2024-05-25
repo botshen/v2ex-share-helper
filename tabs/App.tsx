@@ -104,6 +104,12 @@ export default function DeltaFlyerPage() {
         <Watermark text="V2ex" gutter={16} multiline>
           <div style={styles.container as CSSProperties}>
             <div style={styles.wrapper as CSSProperties}>
+              <div style={{
+                fontWeight:'800',
+                fontSize:"30px",
+                height:'40px',
+                color:'#333333'
+              }}>V2EX</div>
               <div className="title" style={styles.title as CSSProperties}>{title}</div>
               <div style={styles.authorContainer as CSSProperties}>
                 {avatarUrl && <img src={avatarUrl} alt="头像" style={styles.avatar as CSSProperties} />}
