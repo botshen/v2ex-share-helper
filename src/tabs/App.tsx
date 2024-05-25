@@ -1,4 +1,4 @@
-import { useEffect, useState, type CSSProperties } from "react";
+import { useEffect, useReducer, useState, type CSSProperties } from "react";
 import { toPng } from 'html-to-image';
 import download from 'downloadjs';
 import '../style.scss';
@@ -93,6 +93,7 @@ export default function DeltaFlyerPage() {
       }
     }
   };
+  const [count, increase] = useReducer((c) => c + 1, 0)
 
   return (
     <div style={{ ...styles.pageContainer, backgroundColor: randomBgColor }} className="xxx">
@@ -101,14 +102,23 @@ export default function DeltaFlyerPage() {
         <button style={styles.button as CSSProperties} onClick={downloadImage}>下载图片</button>
       </div>
       <div id="post-content">
+        <button
+          onClick={() => increase()}
+          type="button"
+          className="inline-flex items-center px-5 py-2.5 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+          Count:
+          <span className="inline-flex items-center justify-center w-8 h-4 ml-2 text-xs font-semibold text-blue-800 bg-blue-200 rounded-full">
+            {count}
+          </span>
+        </button>
         <Watermark text="V2ex" gutter={16} multiline>
           <div style={styles.container as CSSProperties}>
             <div style={styles.wrapper as CSSProperties}>
               <div style={{
-                fontWeight:'800',
-                fontSize:"30px",
-                height:'40px',
-                color:'#333333'
+                fontWeight: '800',
+                fontSize: "30px",
+                height: '40px',
+                color: '#333333'
               }}>V2EX</div>
               <div className="title" style={styles.title as CSSProperties}>{title}</div>
               <div style={styles.authorContainer as CSSProperties}>
