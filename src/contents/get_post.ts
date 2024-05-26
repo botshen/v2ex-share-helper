@@ -5,10 +5,7 @@ export const config: PlasmoCSConfig = {
   all_frames: true,
   run_at: "document_end"
 };
-
-console.log(
-  "You may find that having is not so pleasing a thing as wanting. This is not logical, but it is often true."
-);
+ 
 let comments;
 // 查找所有评论元素
 const mainElement = document.querySelector("#Main");
@@ -197,6 +194,23 @@ function collectCheckedComments() {
         const avatarElement = commentElement.querySelector("img.avatar") as HTMLImageElement;
         const authorElement = commentElement.querySelector("strong a.dark") as HTMLElement;
         const contentElement = commentElement.querySelector(".reply_content") as HTMLElement;
+        console.log('contentElement', contentElement);
+
+        if (contentElement) {
+          // 搜索 ".cited_reply" 内的 ".custom-checkbox" 并移除它们
+          const citedReplyElement = contentElement.querySelector(".cited_reply");
+          if (citedReplyElement) {
+            const checkboxesInCitedReply = citedReplyElement.querySelectorAll(".custom-checkbox");
+            checkboxesInCitedReply.forEach(checkbox => {
+              if (checkbox.parentNode === citedReplyElement) {
+                citedReplyElement.removeChild(checkbox);
+              } else {
+                checkbox.remove();  // 直接移除 checkbox 自己
+              }
+            });
+          }
+        }
+
         const avatarUrl = avatarElement ? avatarElement.src : "未找到头像";
         const author = authorElement ? authorElement.textContent : "未找到作者";
         const content = contentElement ? contentElement.innerHTML : "未找到评论内容"; // 获取HTML内容
@@ -205,7 +219,6 @@ function collectCheckedComments() {
           avatarUrl,
           author,
           content,
-
         });
       }
     }
