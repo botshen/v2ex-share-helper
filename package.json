@@ -1,8 +1,8 @@
 {
-  "name": "v2ex-share-helper",
-  "displayName": "V2ex share helper",
-  "version": "0.0.4",
-  "description": "Easily share V2EX articles and comments with a single click",
+  "name": "v2ex-share",
+  "displayName": "v2ex share",
+  "version": "0.0.6",
+  "description": "一个能让你分享高大上的分享V2ex的工具，带你装逼带你飞！",
   "author": "botshen",
   "scripts": {
     "dev": "plasmo dev",

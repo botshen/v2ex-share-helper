@@ -9,35 +9,44 @@ export const config: PlasmoCSConfig = {
 console.log(
   "You may find that having is not so pleasing a thing as wanting. This is not logical, but it is often true."
 );
-
+let comments;
 // 查找所有评论元素
-const comments = document.querySelectorAll(".cell[data-floor-number]"); // 选择具有 data-floor-number 属性的 .cell 元素
+const mainElement = document.querySelector("#Main");
+if (mainElement) {
+  const boxes = mainElement.querySelectorAll(".box");
+  if (boxes.length > 1) {
+    const secondBox = boxes[1];
+    comments = secondBox.querySelectorAll("[id^='r_']"); // 查找ID以r_开头的节点
 
-comments.forEach(comment => {
-  const commentElement = comment as HTMLElement;
+    comments.forEach(comment => {
+      const commentElement = comment as HTMLElement;
 
-  // 创建一个容器用于包裹勾选框和评论内容
-  const wrapperDiv = document.createElement("div");
-  wrapperDiv.style.display = "flex"; // 使用flexbox布局
-  // wrapperDiv.style.alignItems = "center"; // 使用flexbox的align-items属性实现居中对齐
+      // 创建一个容器用于包裹勾选框和评论内容
+      const wrapperDiv = document.createElement("div");
+      wrapperDiv.style.display = "flex"; // 使用flexbox布局
+      // wrapperDiv.style.alignItems = "center"; // 使用flexbox的align-items属性实现居中对齐
 
-  // 创建勾选框元素
-  const checkbox = document.createElement("input");
-  checkbox.type = "checkbox";
-  checkbox.style.marginRight = "10px"; // 添加一些右边距使得勾选框和评论内容之间有间隔
-  checkbox.classList.add("custom-checkbox"); // 添加自定义 CSS 类
+      // 创建勾选框元素
+      const checkbox = document.createElement("input");
+      checkbox.type = "checkbox";
+      checkbox.style.marginRight = "10px"; // 添加一些右边距使得勾选框和评论内容之间有间隔
+      checkbox.style.marginTop = "15px"; // 添加一些右边距使得勾选框和评论内容之间有间隔
 
-  // 将勾选框插入到新的容器中
-  wrapperDiv.appendChild(checkbox);
+      checkbox.classList.add("custom-checkbox"); // 添加自定义 CSS 类
 
-  // 将原评论内容移至容器中
-  while (commentElement.firstChild) {
-    wrapperDiv.appendChild(commentElement.firstChild);
+      // 将勾选框插入到新的容器中
+      wrapperDiv.appendChild(checkbox);
+
+      // 将原评论内容移至容器中
+      while (commentElement.firstChild) {
+        wrapperDiv.appendChild(commentElement.firstChild);
+      }
+
+      // 将新的容器插入到原评论元素中
+      commentElement.appendChild(wrapperDiv);
+    });
   }
-
-  // 将新的容器插入到原评论元素中
-  commentElement.appendChild(wrapperDiv);
-});
+}
 
 // 查找 body > #Wrapper > .content > #Main > 第一个 .box > .box
 const wrapper = document.querySelector("#Wrapper");
@@ -110,11 +119,7 @@ function sharePostContent() {
 
   // 获取帖子内容
   const postContentElement = document.querySelector(".topic_content");
-  if (!postContentElement) {
-    alert("未找到帖子内容！");
-    return;
-  }
-  const postContent = postContentElement.innerHTML;
+  const postContent = postContentElement ? postContentElement.innerHTML : "";
 
   // 获取标题
   const titleElement = document.querySelector("#Wrapper .content #Main .box .header h1");
@@ -207,5 +212,3 @@ function collectCheckedComments() {
   });
   return checkedComments;
 }
-
-

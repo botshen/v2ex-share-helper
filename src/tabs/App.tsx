@@ -39,6 +39,8 @@ export default function DeltaFlyerPage() {
   const [postscripts, setPostscripts] = useState<Postscript[]>([]);
   const [showQrCode, setShowQrCode] = useState<boolean>(true);
   const [showSubPost, setshowSubPost] = useState<boolean>(true);
+  const [showComments, setShowComments] = useState<boolean>(true);
+  const [showPost, setShowPost] = useState<boolean>(true);
   const [url, setUrl] = useState<string>("");
 
 
@@ -88,6 +90,45 @@ export default function DeltaFlyerPage() {
       <div className="fixed top-5 left-[67%] flex flex-col justify-center p-2 gap-4 z-50 bg-white rounded-lg">
         <Button onClick={copyImageToClipboard} >复制图片</Button>
         <Button onClick={downloadImage} >下载图片</Button>
+        {
+          postscripts.length > 0 && <div className="flex items-center gap-2">
+            <Checkbox
+              checked={showPost}
+              onCheckedChange={(checked) => {
+                if (typeof checked === 'boolean') {
+                  setShowPost(checked);
+                }
+              }}
+            />
+            显示正文
+          </div>
+        }
+        {
+          postscripts.length > 0 && <div className="flex items-center gap-2">
+            <Checkbox
+              checked={showSubPost}
+              onCheckedChange={(checked) => {
+                if (typeof checked === 'boolean') {
+                  setshowSubPost(checked);
+                }
+              }}
+            />
+            显示附言
+          </div>
+        }
+        {
+          comments.length > 0 && <div className="flex items-center gap-2">
+            <Checkbox
+              checked={showComments}
+              onCheckedChange={(checked) => {
+                if (typeof checked === 'boolean') {
+                  setShowComments(checked);
+                }
+              }}
+            />
+            显示评论
+          </div>
+        }
         <div className="flex items-center gap-2">
           <Checkbox
             checked={showQrCode}
@@ -97,22 +138,13 @@ export default function DeltaFlyerPage() {
               }
             }}
           />
-          显示分享二维码
-        </div>
-        <div className="flex items-center gap-2">
-          <Checkbox
-            checked={showSubPost}
-            onCheckedChange={(checked) => {
-              if (typeof checked === 'boolean') {
-                setshowSubPost(checked);
-              }
-            }}
-          />
-          显示附言
+          显示二维码
         </div>
       </div>
-      <div id="post-content" className="bg-white rounded-lg p-6 max-w-sm shadow-md">
-        <Watermark text="V2ex" gutter={16} multiline>
+      <div id="post-content" className="bg-white   p-6  max-w-sm shadow-md">
+        <Watermark lineHeight="1.4rem" opacity={0.5} textSize={18}
+          text={`图片由\n v2ex share\n 扩展生成`} 
+          gutter={50} multiline >
           <div>
             <div className="font-bold text-3xl h-10 text-[#333333]">V2EX</div>
             <div className="text-2xl font-bold text-[#333333]">{title}</div>
@@ -120,8 +152,11 @@ export default function DeltaFlyerPage() {
               {avatarUrl && <img src={avatarUrl} alt="头像" className="w-10 h-10 rounded-full mr-2" />}
               <span className="text-lg text-[#555555]">{author}</span>
             </div>
-            <div className="text-lg text-[#444444] leading-relaxed mt-4" dangerouslySetInnerHTML={{ __html: postContent }} />
-
+            {
+              showPost && postContent.length > 0 && (
+                <div className="text-lg text-[#444444] leading-relaxed mt-4" dangerouslySetInnerHTML={{ __html: postContent }} />
+              )
+            }
             {showSubPost && postscripts.length > 0 && (
               <div className="mt-6">
                 <h3 className="text-xl font-bold text-[#333333] mb-2">附言</h3>
@@ -131,7 +166,7 @@ export default function DeltaFlyerPage() {
               </div>
             )}
 
-            {comments.length > 0 && (
+            {showComments && comments.length > 0 && (
               <div className="mt-6">
                 <h3 className="text-xl font-bold text-[#333333] mb-2">精选评论</h3>
                 {comments.map((comment, index) => (
