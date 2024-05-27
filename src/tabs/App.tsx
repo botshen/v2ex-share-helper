@@ -2,12 +2,12 @@ import { Watermark } from '@hirohe/react-watermark';
 import download from 'downloadjs';
 import { QRCodeSVG } from 'qrcode.react';
 import { Resizable } from 're-resizable';
+import { ReloadIcon } from "@radix-ui/react-icons"
 
-import { toPng } from 'html-to-image';
-import { useState } from "react";
+import { toPng, toJpeg } from 'html-to-image';
+import { useEffect, useState } from "react";
 import toast, { Toaster } from 'react-hot-toast';
 import { Button } from "~components/ui/button";
-import { Checkbox } from "~components/ui/checkbox";
 import '../style.css';
 const notify = () => toast('已复制到剪贴板📋', { icon: '✅' });
 
@@ -39,10 +39,13 @@ export default function DeltaFlyerPage() {
   const [comments, setComments] = useState<Comment[]>([]);
   const [postscripts, setPostscripts] = useState<Postscript[]>([]);
   const [showQrCode, setShowQrCode] = useState<boolean>(true);
-  const [showSubPost, setshowSubPost] = useState<boolean>(true);
+  const [showSubPost, setShowSubPost] = useState<boolean>(true);
   const [showComments, setShowComments] = useState<boolean>(true);
   const [showPost, setShowPost] = useState<boolean>(true);
   const [url, setUrl] = useState<string>("");
+  const [loading, setLoading] = useState<boolean>(false);
+  const [loadingDownload, setLoadingloadingDownload] = useState<boolean>(false);
+
 
 
 
@@ -63,13 +66,20 @@ export default function DeltaFlyerPage() {
     const element = document.getElementById("post-content");
     if (element) {
       try {
-        const dataUrl = await toPng(element);
+        setLoading(true);
+        const dataUrl = await toPng(element, {
+          fetchRequestInit: {
+            cache: 'no-cache',
+          },
+        });
         const blob = await (await fetch(dataUrl)).blob();
         const item = new ClipboardItem({ "image/png": blob });
         await navigator.clipboard.write([item]);
+        setLoading(false);
         notify()
       } catch (error) {
         console.error('复制图片失败:', error);
+        setLoading(false);
       }
     }
   };
@@ -78,66 +88,75 @@ export default function DeltaFlyerPage() {
     const element = document.getElementById("post-content");
     if (element) {
       try {
-        const dataUrl = await toPng(element);
+        setLoadingloadingDownload(true)
+        const dataUrl = await toPng(element, {
+          fetchRequestInit: {
+            cache: 'no-cache',
+          },
+        });
+        setLoadingloadingDownload(false)
+
         download(dataUrl, 'v2ex.png');
       } catch (error) {
         console.error('下载图片失败:', error);
+        setLoadingloadingDownload(false)
+
       }
     }
   };
 
   return (
     <div className="flex flex-col items-center p-6 min-h-screen bg-slate-300" >
-      <div className="fixed top-5 right-5 flex flex-col justify-center p-2 gap-4 z-50 bg-white border-black rounded-lg">
-        <Button onClick={copyImageToClipboard} >复制为图片</Button>
-        <Button onClick={downloadImage} >保存为图片</Button>
+      <div className="fixed top-5 right-5 flex flex-col justify-center p-4 gap-4 z-50 bg-white border-black rounded-lg">
+        <Button disabled={loading} onClick={copyImageToClipboard} >
+          {
+            loading && <ReloadIcon className="mr-2 h-4 w-4 animate-spin" />
+          }
+          复制为图片</Button>
+        <Button onClick={downloadImage} disabled={loadingDownload} >
+          {
+            loadingDownload && <ReloadIcon className="mr-2 h-4 w-4 animate-spin" />
+          }
+          保存为图片</Button>
         {
           postContent.length > 0 && <div className="flex items-center gap-2">
-            <Checkbox
+            <input
+              className="w-4 h-4 text-gray-800 bg-gray-700 border-gray-600"
+              type="checkbox"
               checked={showPost}
-              onCheckedChange={(checked) => {
-                if (typeof checked === 'boolean') {
-                  setShowPost(checked);
-                }
-              }}
+              onChange={(e) => setShowPost(e.target.checked)}
             />
             显示正文
           </div>
         }
         {
           postscripts.length > 0 && <div className="flex items-center gap-2">
-            <Checkbox
+            <input
+              className="w-4 h-4 text-gray-800 bg-gray-700 border-gray-600"
+              type="checkbox"
               checked={showSubPost}
-              onCheckedChange={(checked) => {
-                if (typeof checked === 'boolean') {
-                  setshowSubPost(checked);
-                }
-              }}
+              onChange={(e) => setShowSubPost(e.target.checked)}
             />
             显示附言
           </div>
         }
         {
           comments.length > 0 && <div className="flex items-center gap-2">
-            <Checkbox
+            <input
+              className="w-4 h-4 text-gray-800 bg-gray-700 border-gray-600"
+              type="checkbox"
               checked={showComments}
-              onCheckedChange={(checked) => {
-                if (typeof checked === 'boolean') {
-                  setShowComments(checked);
-                }
-              }}
+              onChange={(e) => setShowComments(e.target.checked)}
             />
             显示评论
           </div>
         }
         <div className="flex items-center gap-2">
-          <Checkbox
+          <input
+            className="w-4 h-4 text-gray-800 bg-gray-700 border-gray-600"
+            type="checkbox"
             checked={showQrCode}
-            onCheckedChange={(checked) => {
-              if (typeof checked === 'boolean') {
-                setShowQrCode(checked);
-              }
-            }}
+            onChange={(e) => setShowQrCode(e.target.checked)}
           />
           显示二维码
         </div>
@@ -148,7 +167,7 @@ export default function DeltaFlyerPage() {
           width: 448
         }}
         minWidth={390}
-        maxWidth={1500}
+        maxWidth={1000}
         handleComponent={{
           right: (
             <div className="absolute top-0 right-0 h-full w-2 bg-[#436684] cursor-ew-resize"></div>
@@ -223,3 +242,5 @@ export default function DeltaFlyerPage() {
     </div>
   );
 }
+
+

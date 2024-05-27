@@ -73,7 +73,7 @@ module.exports = {
     },
   },
   plugins: [require("tailwindcss-animate"), require('@tailwindcss/typography')],
-  // corePlugins: {
-  //   preflight: false, // 禁用 Tailwind CSS 的预设样式
-  // },
+  corePlugins: {
+    preflight: false, // 禁用 Tailwind CSS 的预设样式
+  },
 }
