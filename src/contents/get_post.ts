@@ -5,86 +5,8 @@ export const config: PlasmoCSConfig = {
   all_frames: true,
   run_at: "document_end"
 };
- 
-let comments;
-// 查找所有评论元素
-const mainElement = document.querySelector("#Main");
-if (mainElement) {
-  const boxes = mainElement.querySelectorAll(".box");
-  if (boxes.length > 1) {
-    const secondBox = boxes[1];
-    comments = secondBox.querySelectorAll("[id^='r_']"); // 查找ID以r_开头的节点
 
-    comments.forEach(comment => {
-      const commentElement = comment as HTMLElement;
-
-      // 创建一个容器用于包裹勾选框和评论内容
-      const wrapperDiv = document.createElement("div");
-      wrapperDiv.style.display = "flex"; // 使用flexbox布局
-      // wrapperDiv.style.alignItems = "center"; // 使用flexbox的align-items属性实现居中对齐
-
-      // 创建勾选框元素
-      const checkbox = document.createElement("input");
-      checkbox.type = "checkbox";
-      checkbox.style.marginRight = "10px"; // 添加一些右边距使得勾选框和评论内容之间有间隔
-      checkbox.style.marginTop = "15px"; // 添加一些右边距使得勾选框和评论内容之间有间隔
-
-      checkbox.classList.add("custom-checkbox"); // 添加自定义 CSS 类
-
-      // 将勾选框插入到新的容器中
-      wrapperDiv.appendChild(checkbox);
-
-      // 将原评论内容移至容器中
-      while (commentElement.firstChild) {
-        wrapperDiv.appendChild(commentElement.firstChild);
-      }
-
-      // 将新的容器插入到原评论元素中
-      commentElement.appendChild(wrapperDiv);
-    });
-  }
-}
-
-// 查找 body > #Wrapper > .content > #Main > 第一个 .box > .box
-const wrapper = document.querySelector("#Wrapper");
-if (wrapper) {
-  const content = wrapper.querySelector(".content");
-  if (content) {
-    const main = content.querySelector("#Main");
-    if (main) {
-      const firstBox = main.querySelector(".box") as HTMLElement;
-      if (firstBox && firstBox.classList.contains("box")) {
-        let topicButtons = firstBox.querySelector(".topic_buttons") as HTMLElement;
-        console.log('topicButtons', topicButtons)
-
-        if (!topicButtons) {
-          // 如果不存在 .topic_buttons 元素，则创建一个新的
-          topicButtons = document.createElement("div");
-          topicButtons.className = "topic_buttons";
-          topicButtons.style.padding = "5px";
-          topicButtons.style.fontSize = "14px";
-          topicButtons.style.lineHeight = "120%";
-          topicButtons.style.background = "linear-gradient(#eee 0,#ccc 100%)";
-          topicButtons.style.borderRadius = "0 0 3px 3px";
-          topicButtons.style.textAlign = "left";
-
-          // 将新的 .topic_buttons 元素插入到 .box 的最后一项之后
-          const lastCell = firstBox.lastElementChild;
-          if (lastCell) {
-            lastCell.insertAdjacentElement("afterend", topicButtons);
-          } else {
-            firstBox.appendChild(topicButtons);
-          }
-        }
-
-        // 创建并插入分享文字按钮
-        insertShareButton(topicButtons);
-      }
-    }
-  }
-}
-
-// 添加自定义样式
+let comments: NodeListOf<Element> | null = null;
 const style = document.createElement("style");
 style.textContent = `
     .custom-checkbox {
@@ -92,12 +14,12 @@ style.textContent = `
       width: 20px;
       height: 20px;
       cursor: pointer;
-      accent-color: #007BFF; /* 修改为你喜欢的颜色 */
-      border: 2px solid #007BFF; /* 添加边框使其更显眼 */
-      border-radius: 4px; /* 添加圆角 */
+      accent-color: #007BFF;
+      border: 2px solid #007BFF;
+      border-radius: 4px;
     }
     .custom-checkbox:checked {
-      background-color: #007BFF; /* 修改为你喜欢的颜色 */
+      background-color: #007BFF;
     }
     .topic_buttons {
       padding: 5px;
@@ -107,46 +29,126 @@ style.textContent = `
       border-radius: 0 0 3px 3px;
       text-align: left;
     }
+    .custom-button {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      z-index: 1000;
+      padding: 10px 20px;
+      background-color: #dc503e;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
   `;
 document.head.append(style);
 
-// 分享帖子内容的函数
+// 创建总开关按钮
+const toggleButton = document.createElement("button");
+toggleButton.textContent = "选择模式";
+toggleButton.className = "custom-button";
+toggleButton.addEventListener("click", toggleSelectionMode);
+document.body.appendChild(toggleButton);
+
+function toggleSelectionMode() {
+  if (comments) {
+    comments.forEach((comment) => {
+      const commentElement = comment as HTMLElement;
+      const existingCheckbox = commentElement.querySelector(".custom-checkbox");
+      if (existingCheckbox) {
+        existingCheckbox.remove();
+      } else {
+        addCheckboxToComment(comment);
+      }
+    });
+  }
+}
+
+function addCheckboxToComment(comment: Element) {
+  const commentElement = comment as HTMLElement;
+
+  // 创建一个容器用于包裹勾选框和评论内容
+  const wrapperDiv = document.createElement("div");
+  wrapperDiv.style.display = "flex"; 
+
+  // 创建勾选框元素
+  const checkbox = document.createElement("input");
+  checkbox.type = "checkbox";
+  checkbox.classList.add("custom-checkbox");
+
+  // 将勾选框插入到新的容器中
+  wrapperDiv.appendChild(checkbox);
+
+  // 将原评论内容移至容器中
+  while (commentElement.firstChild) {
+    wrapperDiv.appendChild(commentElement.firstChild);
+  }
+
+  // 将新的容器插入到原评论元素中
+  commentElement.appendChild(wrapperDiv);
+}
+
+// 初始查找所有评论元素
+const mainElement = document.querySelector("#Main");
+if (mainElement) {
+  const boxes = mainElement.querySelectorAll(".box");
+  if (boxes.length > 1) {
+    const secondBox = boxes[1];
+    comments = secondBox.querySelectorAll("[id^='r_']");
+  }
+}
+
+// 其余代码保留原样，包括分享按钮的创建和分享功能实现
+
+// 查找 body > #Wrapper > .content > #Main > 第一个 .box > .box
+const wrapper = document.querySelector("#Wrapper");
+if (wrapper) {
+  const content = wrapper.querySelector('.content');
+  if (content) {
+    const main = content.querySelector("#Main");
+    if (main) {
+      const firstBox = main.querySelector(".box") as HTMLElement;
+      if (firstBox && firstBox.classList.contains("box")) {
+        let topicButtons = firstBox.querySelector(".topic_buttons") as HTMLElement;
+        if (!topicButtons) {
+          // 如果不存在 .topic_buttons 元素，则创建一个新的
+          topicButtons = document.createElement("div");
+          topicButtons.className = "topic_buttons";
+          const lastCell = firstBox.lastElementChild;
+          if (lastCell) {
+            lastCell.insertAdjacentElement("afterend", topicButtons);
+          } else {
+            firstBox.appendChild(topicButtons);
+          }
+        }
+        insertShareButton(topicButtons);
+      }
+    }
+  }
+}
+
 function sharePostContent() {
   console.log('开始分享帖子内容');
 
-  // 获取帖子内容
   const postContentElement = document.querySelector(".topic_content");
   const postContent = postContentElement ? postContentElement.innerHTML : "";
 
-  // 获取标题
   const titleElement = document.querySelector("#Wrapper .content #Main .box .header h1");
   const title = titleElement ? titleElement.textContent : "未找到标题";
-  console.log('title', title)
 
-  // 获取作者名字
   const authorElement = document.querySelector("#Wrapper .content #Main .box .header small a");
   const author = authorElement ? authorElement.textContent : "未找到作者";
-  console.log('author', author)
 
-  // 获取头像 URL
   const avatarElement = document.querySelector("#Wrapper .content #Main .box .header img") as HTMLImageElement;
   const avatarUrl = avatarElement ? avatarElement.src : "未找到头像";
-  console.log('avatarUrl', avatarUrl)
-  // 获取附言内容
+
   const postscriptElements = document.querySelectorAll("#Wrapper .content #Main .box .subtle .topic_content");
-  const postscripts = Array.from(postscriptElements).map(element => {
-    return { content: element.innerHTML };
-  });
-  // 示例：获取并打印所有勾选的评论信息
+  const postscripts = Array.from(postscriptElements).map(element => ({ content: element.innerHTML }));
+
   const checkedComments = collectCheckedComments();
-  console.log('Checked Comments:', checkedComments);
-  console.log('postscripts', postscripts)
-
-  // 获取当前页面的 URL
   const currentPageUrl = window.location.href;
-  console.log('currentPageUrl', currentPageUrl);
 
-  // 创建新的标签页并传递内容
   chrome.runtime.sendMessage({
     action: "openNewTab",
     data: {
@@ -161,67 +163,54 @@ function sharePostContent() {
   });
 }
 
-// 插入分享按钮的函数
 function insertShareButton(container: HTMLElement) {
-  // 检查是否已经存在分享按钮
   if (container.querySelector(".tb.share-button")) {
     return;
   }
 
-  // 创建新的分享文字按钮
   const shareTextButton = document.createElement("a");
   shareTextButton.href = "#;";
   shareTextButton.className = "tb share-button";
   shareTextButton.textContent = "分享帖子";
-  shareTextButton.style.marginRight = "10px"; // 添加一些右边距使得按钮之间有间隔
-  shareTextButton.style.marginLeft = "10px"; // 添加一些右边距使得按钮之间有间隔
+  shareTextButton.style.marginRight = "10px";
+  shareTextButton.style.marginLeft = "10px";
+  shareTextButton.addEventListener("click", sharePostContent);
 
-  // 添加点击事件处理函数
-  shareTextButton.addEventListener("click", () => {
-    sharePostContent();
-  });
-
-  // 将新的按钮插入到操作按钮容器中
   container.appendChild(shareTextButton);
 }
+
 function collectCheckedComments() {
   const checkedComments = [];
-  comments.forEach(comment => {
-    const checkbox = comment.querySelector(".custom-checkbox") as HTMLInputElement;
-    if (checkbox && checkbox.checked) {
-      const commentElement = comment.querySelector("table") as HTMLElement;
-      if (commentElement) {
-        const avatarElement = commentElement.querySelector("img.avatar") as HTMLImageElement;
-        const authorElement = commentElement.querySelector("strong a.dark") as HTMLElement;
-        const contentElement = commentElement.querySelector(".reply_content") as HTMLElement;
-        console.log('contentElement', contentElement);
-
-        if (contentElement) {
-          // 搜索 ".cited_reply" 内的 ".custom-checkbox" 并移除它们
-          const citedReplyElement = contentElement.querySelector(".cited_reply");
-          if (citedReplyElement) {
-            const checkboxesInCitedReply = citedReplyElement.querySelectorAll(".custom-checkbox");
-            checkboxesInCitedReply.forEach(checkbox => {
-              if (checkbox.parentNode === citedReplyElement) {
-                citedReplyElement.removeChild(checkbox);
-              } else {
-                checkbox.remove();  // 直接移除 checkbox 自己
-              }
-            });
+  if (comments) {
+    comments.forEach(comment => {
+      const checkbox = comment.querySelector(".custom-checkbox") as HTMLInputElement;
+      if (checkbox && checkbox.checked) {
+        const commentElement = comment.querySelector("table") as HTMLElement;
+        if (commentElement) {
+          const avatarElement = commentElement.querySelector("img.avatar") as HTMLImageElement;
+          const authorElement = commentElement.querySelector("strong a.dark") as HTMLElement;
+          const contentElement = commentElement.querySelector(".reply_content") as HTMLElement;
+          if (contentElement) {
+            const citedReplyElement = contentElement.querySelector(".cited_reply");
+            if (citedReplyElement) {
+              const checkboxesInCitedReply = citedReplyElement.querySelectorAll(".custom-checkbox");
+              checkboxesInCitedReply.forEach(checkbox => {
+                if (checkbox.parentNode === citedReplyElement) {
+                  citedReplyElement.removeChild(checkbox);
+                } else {
+                  checkbox.remove();
+                }
+              });
+            }
           }
+          const avatarUrl = avatarElement ? avatarElement.src : "未找到头像";
+          const author = authorElement ? authorElement.textContent : "未找到作者";
+          const content = contentElement ? contentElement.innerHTML : "未找到评论内容";
+
+          checkedComments.push({ avatarUrl, author, content });
         }
-
-        const avatarUrl = avatarElement ? avatarElement.src : "未找到头像";
-        const author = authorElement ? authorElement.textContent : "未找到作者";
-        const content = contentElement ? contentElement.innerHTML : "未找到评论内容"; // 获取HTML内容
-
-        checkedComments.push({
-          avatarUrl,
-          author,
-          content,
-        });
       }
-    }
-  });
+    });
+  }
   return checkedComments;
 }
