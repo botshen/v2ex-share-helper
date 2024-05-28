@@ -44,51 +44,6 @@ style.textContent = `
   `;
 document.head.append(style);
 
-// 创建总开关按钮
-const toggleButton = document.createElement("button");
-toggleButton.textContent = "选择模式";
-toggleButton.className = "custom-button";
-toggleButton.addEventListener("click", toggleSelectionMode);
-document.body.appendChild(toggleButton);
-
-function toggleSelectionMode() {
-  if (comments) {
-    comments.forEach((comment) => {
-      const commentElement = comment as HTMLElement;
-      const existingCheckbox = commentElement.querySelector(".custom-checkbox");
-      if (existingCheckbox) {
-        existingCheckbox.remove();
-      } else {
-        addCheckboxToComment(comment);
-      }
-    });
-  }
-}
-
-function addCheckboxToComment(comment: Element) {
-  const commentElement = comment as HTMLElement;
-
-  // 创建一个容器用于包裹勾选框和评论内容
-  const wrapperDiv = document.createElement("div");
-  wrapperDiv.style.display = "flex";
-
-  // 创建勾选框元素
-  const checkbox = document.createElement("input");
-  checkbox.type = "checkbox";
-  checkbox.classList.add("custom-checkbox");
-
-  // 将勾选框插入到新的容器中
-  wrapperDiv.appendChild(checkbox);
-
-  // 将原评论内容移至容器中
-  while (commentElement.firstChild) {
-    wrapperDiv.appendChild(commentElement.firstChild);
-  }
-
-  // 将新的容器插入到原评论元素中
-  commentElement.appendChild(wrapperDiv);
-}
-
 // 初始查找所有评论元素
 const mainElement = document.querySelector("#Main");
 if (mainElement) {
@@ -98,8 +53,6 @@ if (mainElement) {
     comments = secondBox.querySelectorAll("[id^='r_']");
   }
 }
-
-// 其余代码保留原样，包括分享按钮的创建和分享功能实现
 
 // 查找 body > #Wrapper > .content > #Main > 第一个 .box > .box
 const wrapper = document.querySelector("#Wrapper");
@@ -128,11 +81,23 @@ if (wrapper) {
   }
 }
 
+// 移除 HTML 字符串中的所有具有 small fade 类的 span 元素
+function removeSmallFadeSpans(html: string): string {
+  const container = document.createElement('div');
+  container.innerHTML = html;
+  const spans = container.querySelectorAll("span.small.fade");
+  spans.forEach(span => {
+    span.remove();
+  });
+  return container.innerHTML;
+}
+
 function sharePostContent() {
   console.log('开始分享帖子内容');
 
   const postContentElement = document.querySelector(".topic_content");
-  const postContent = postContentElement ? postContentElement.innerHTML : "";
+  let postContent = postContentElement ? postContentElement.innerHTML : "";
+  postContent = removeSmallFadeSpans(postContent);
 
   const titleElement = document.querySelector("#Wrapper .content #Main .box .header h1");
   const title = titleElement ? titleElement.textContent : "未找到标题";
@@ -144,7 +109,9 @@ function sharePostContent() {
   const avatarUrl = avatarElement ? avatarElement.src : "未找到头像";
 
   const postscriptElements = document.querySelectorAll("#Wrapper .content #Main .box .subtle .topic_content");
-  const postscripts = Array.from(postscriptElements).map(element => ({ content: element.innerHTML }));
+  const postscripts = Array.from(postscriptElements).map(element => ({
+    content: removeSmallFadeSpans((element as HTMLElement).innerHTML)
+  }));
 
   const checkedComments = collectCheckedComments();
   const currentPageUrl = window.location.href;
@@ -183,32 +150,18 @@ function collectCheckedComments() {
   const checkedComments = [];
   if (comments) {
     comments.forEach(comment => {
-      const checkbox = comment.querySelector(".custom-checkbox") as HTMLInputElement;
-      if (checkbox && checkbox.checked) {
-        const commentElement = comment.querySelector("table") as HTMLElement;
-        if (commentElement) {
-          const avatarElement = commentElement.querySelector("img.avatar") as HTMLImageElement;
-          const authorElement = commentElement.querySelector("strong a.dark") as HTMLElement;
-          const contentElement = commentElement.querySelector(".reply_content") as HTMLElement;
-          if (contentElement) {
-            const citedReplyElement = contentElement.querySelector(".cited_reply");
-            if (citedReplyElement) {
-              const checkboxesInCitedReply = citedReplyElement.querySelectorAll(".custom-checkbox");
-              checkboxesInCitedReply.forEach(checkbox => {
-                if (checkbox.parentNode === citedReplyElement) {
-                  citedReplyElement.removeChild(checkbox);
-                } else {
-                  checkbox.remove();
-                }
-              });
-            }
-          }
-          const avatarUrl = avatarElement ? avatarElement.src : "未找到头像";
-          const author = authorElement ? authorElement.textContent : "未找到作者";
-          const content = contentElement ? contentElement.innerHTML : "未找到评论内容";
+      const commentElement = comment.querySelector("table") as HTMLElement;
+      if (commentElement) {
+        const avatarElement = commentElement.querySelector("img.avatar") as HTMLImageElement;
+        const authorElement = commentElement.querySelector("strong a.dark") as HTMLElement;
+        const contentElement = commentElement.querySelector(".reply_content") as HTMLElement;
 
-          checkedComments.push({ avatarUrl, author, content });
-        }
+        const avatarUrl = avatarElement ? avatarElement.src : "未找到头像";
+        const author = authorElement ? authorElement.textContent : "未找到作者";
+        let content = contentElement ? contentElement.innerHTML : "未找到评论内容";
+        content = removeSmallFadeSpans(content);
+
+        checkedComments.push({ avatarUrl, author, content });
       }
     });
   }
