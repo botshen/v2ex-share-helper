@@ -186,7 +186,7 @@ export default function DeltaFlyerPage() {
       >
         <div id="post-content" className="bg-white   p-6   shadow-md">
           <Watermark lineHeight="1.2rem" opacity={0.5} textSize={12}
-            text={`由 v2ex share\n 扩展生成`}
+            text={``}
             gutter={50} multiline >
             <div>
               <div className="font-bold text-3xl h-10 mb-4 text-[#333333]">V2EX</div>
@@ -195,6 +195,7 @@ export default function DeltaFlyerPage() {
                 {avatarUrl && <img src={avatarUrl} alt="头像" className="w-10 h-10 rounded-full mr-2" />}
                 <span className="text-lg text-[#555555]">{author}</span>
               </div>
+              <hr className="my-3 border-main-400" />
               {
                 showPost && postContent.length > 0 && (
                   <div className="text-lg text-[#444444] leading-relaxed mt-4" dangerouslySetInnerHTML={{ __html: postContent }} />
@@ -224,14 +225,23 @@ export default function DeltaFlyerPage() {
                 </div>
               )}
               {showQrCode && (
-                <div className="mt-6 flex gap-3 justify-end">
-                  <div className='flex flex-col items-center justify-center text-lg'>
-                    <div>长按扫码</div>
-                    <div>查看详情</div>
+                <div className="mt-6 flex justify-end items-center  "> 
+                  <div className='flex flex-row gap-3 items-center justify-center text-lg'>
+                    <div className='flex flex-col items-center justify-center text-lg'>
+                      <div>长按扫码</div>
+                      <div>查看详情</div>
+                    </div>
+                    <QRCodeSVG value={url} size={64} />
                   </div>
-                  <QRCodeSVG value={url} size={64} />
                 </div>
               )}
+              <div className="w-full mt-4">
+                <footer className="bg-[#f9f9f9] rounded-md   p-2"> 
+                    <div className="text-gray-700 text-lg text-center">
+                      在Chrome商店搜索"v2ex share"即可安装
+                    </div>
+                 </footer>
+              </div>
             </div>
           </Watermark>
         </div>

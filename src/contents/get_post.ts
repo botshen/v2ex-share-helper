@@ -11,6 +11,7 @@ const style = document.createElement("style");
 style.textContent = `
     .custom-checkbox {
       margin-right: 10px;
+      margin-top: 10px; 
       width: 20px;
       height: 20px;
       cursor: pointer;
@@ -25,7 +26,6 @@ style.textContent = `
       padding: 5px;
       font-size: 14px;
       line-height: 120%;
-      background: linear-gradient(#eee 0,#ccc 100%);
       border-radius: 0 0 3px 3px;
       text-align: left;
     }
@@ -70,7 +70,7 @@ function addCheckboxToComment(comment: Element) {
 
   // 创建一个容器用于包裹勾选框和评论内容
   const wrapperDiv = document.createElement("div");
-  wrapperDiv.style.display = "flex"; 
+  wrapperDiv.style.display = "flex";
 
   // 创建勾选框元素
   const checkbox = document.createElement("input");
