@@ -81,14 +81,32 @@ if (wrapper) {
   }
 }
 
-// 移除 HTML 字符串中的所有具有 small fade 类的 span 元素
-function removeSmallFadeSpans(html: string): string {
+// 清理HTML内容，删除所有具有指定class的元素
+function cleanHTMLContent(html: string): string {
   const container = document.createElement('div');
   container.innerHTML = html;
-  const spans = container.querySelectorAll("span.small.fade");
-  spans.forEach(span => {
-    span.remove();
+  
+  // 移除 class 为 small fade 的 span 元素
+  const elementsToRemove = container.querySelectorAll("span.small.fade");
+  elementsToRemove.forEach(element => {
+    element.remove();
   });
+
+  // 在 cited_reply 内部，移除 class 为 fr 和 ago 的 div 元素
+  const citedReplies = container.querySelectorAll(".cited_reply");
+  citedReplies.forEach(citedReply => {
+    const frElements = citedReply.querySelectorAll("div.fr");
+    const agoElements = citedReply.querySelectorAll(".ago");
+
+    frElements.forEach(element => {
+      element.remove();
+    });
+
+    agoElements.forEach(element => {
+      element.remove();
+    });
+  });
+
   return container.innerHTML;
 }
 
@@ -97,7 +115,7 @@ function sharePostContent() {
 
   const postContentElement = document.querySelector(".topic_content");
   let postContent = postContentElement ? postContentElement.innerHTML : "";
-  postContent = removeSmallFadeSpans(postContent);
+  postContent = cleanHTMLContent(postContent);
 
   const titleElement = document.querySelector("#Wrapper .content #Main .box .header h1");
   const title = titleElement ? titleElement.textContent : "未找到标题";
@@ -110,7 +128,7 @@ function sharePostContent() {
 
   const postscriptElements = document.querySelectorAll("#Wrapper .content #Main .box .subtle .topic_content");
   const postscripts = Array.from(postscriptElements).map(element => ({
-    content: removeSmallFadeSpans((element as HTMLElement).innerHTML)
+    content: cleanHTMLContent((element as HTMLElement).innerHTML)
   }));
 
   const checkedComments = collectCheckedComments();
@@ -159,7 +177,7 @@ function collectCheckedComments() {
         const avatarUrl = avatarElement ? avatarElement.src : "未找到头像";
         const author = authorElement ? authorElement.textContent : "未找到作者";
         let content = contentElement ? contentElement.innerHTML : "未找到评论内容";
-        content = removeSmallFadeSpans(content);
+        content = cleanHTMLContent(content);
 
         checkedComments.push({ avatarUrl, author, content });
       }

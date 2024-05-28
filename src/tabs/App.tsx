@@ -170,7 +170,7 @@ export default function DeltaFlyerPage() {
         maxWidth={1000}
         handleComponent={{
           right: (
-            <div className="absolute top-0 right-0 h-full w-2 bg-[#436684] cursor-ew-resize"></div>
+            <div className="absolute top-0 right-0 h-full w-2 bg-[#101729] cursor-ew-resize"></div>
           ),
         }}
         enable={{
