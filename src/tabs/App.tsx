@@ -1,11 +1,11 @@
 import { Watermark } from '@hirohe/react-watermark';
+import { ReloadIcon } from "@radix-ui/react-icons";
 import download from 'downloadjs';
 import { QRCodeSVG } from 'qrcode.react';
 import { Resizable } from 're-resizable';
-import { ReloadIcon } from "@radix-ui/react-icons"
 
-import { toPng, toJpeg } from 'html-to-image';
-import { useEffect, useState } from "react";
+import { toPng } from 'html-to-image';
+import { useState } from "react";
 import toast, { Toaster } from 'react-hot-toast';
 import { Button } from "~components/ui/button";
 import '../style.css';
@@ -45,9 +45,8 @@ export default function DeltaFlyerPage() {
   const [url, setUrl] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
   const [loadingDownload, setLoadingloadingDownload] = useState<boolean>(false);
-
-
-
+  const [previewMode, setPreviewMode] = useState<boolean>(false);
+  const [selectedComments, setSelectedComments] = useState<Set<number>>(new Set());
 
   const handleMessage = (message: any) => {
     if (message.action === "showPostContent") {
@@ -62,6 +61,21 @@ export default function DeltaFlyerPage() {
     }
   };
   chrome.runtime.onMessage.addListener(handleMessage);
+
+  const handleCommentChange = (index: number) => {
+    const updatedSet = new Set(selectedComments);
+    if (updatedSet.has(index)) {
+      updatedSet.delete(index);
+    } else {
+      updatedSet.add(index);
+    }
+    setSelectedComments(updatedSet);
+  };
+
+  const togglePreviewMode = () => {
+    setPreviewMode(!previewMode);
+  };
+
   const copyImageToClipboard = async () => {
     const element = document.getElementById("post-content");
     if (element) {
@@ -108,16 +122,17 @@ export default function DeltaFlyerPage() {
   return (
     <div className="flex flex-col items-center p-6 min-h-screen bg-slate-300" >
       <div className="fixed top-5 right-5 flex flex-col justify-center p-4 gap-4 z-50 bg-white border-black rounded-lg">
-        <Button disabled={loading} onClick={copyImageToClipboard} >
+        <Button disabled={loading || !previewMode} onClick={copyImageToClipboard} >
           {
             loading && <ReloadIcon className="mr-2 h-4 w-4 animate-spin" />
           }
           复制为图片</Button>
-        <Button onClick={downloadImage} disabled={loadingDownload} >
+        <Button onClick={downloadImage} disabled={loadingDownload || !previewMode} >
           {
             loadingDownload && <ReloadIcon className="mr-2 h-4 w-4 animate-spin" />
           }
           保存为图片</Button>
+        <Button variant="destructive" onClick={togglePreviewMode} >{previewMode ? "退出预览" : "预览图片"}</Button>
         {
           postContent.length > 0 && <div className="flex items-center gap-2">
             <input
@@ -175,7 +190,7 @@ export default function DeltaFlyerPage() {
         }}
         enable={{
           top: false,
-          right: true,
+          right: previewMode ? false : true,
           bottom: false,
           left: false,
           topRight: false,
@@ -184,7 +199,7 @@ export default function DeltaFlyerPage() {
           topLeft: false
         }}
       >
-        <div id="post-content" className="bg-white   p-6   shadow-md">
+        <div id="post-content" className="bg-white p-6 shadow-md">
           <Watermark lineHeight="1.2rem" opacity={0.5} textSize={12}
             text={``}
             gutter={50} multiline >
@@ -209,23 +224,35 @@ export default function DeltaFlyerPage() {
                   ))}
                 </div>
               )}
-
               {showComments && comments.length > 0 && (
                 <div className="mt-6">
                   <h3 className="text-xl font-bold text-[#333333] mb-2">精选评论</h3>
-                  {comments.map((comment, index) => (
-                    <div key={index} className="flex items-center mb-4">
-                      <img src={comment.avatarUrl} alt="头像" className="w-8 h-8 rounded-full mr-2 border border-gray-400" />
-                      <div className="flex-1 bg-[#f9f9f9] rounded-md p-4">
-                        <span className="text-sm font-bold text-[#555555] mb-1">{comment.author}</span>
-                        <div className="text-sm text-[#555555]" dangerouslySetInnerHTML={{ __html: comment.content }} />
+                  {comments.map((comment, index) => {
+                    if (previewMode && !selectedComments.has(index)) {
+                      return null; // 预览模式下未勾选的评论不显示
+                    }
+                    return (
+                      <div key={index} className="flex items-center mb-4">
+                        {!previewMode && (
+                          <input
+                            type="checkbox"
+                            className="mr-2"
+                            checked={selectedComments.has(index)}
+                            onChange={() => handleCommentChange(index)}
+                          />
+                        )}
+                        <img src={comment.avatarUrl} alt="头像" className="w-8 h-8 rounded-full mr-2 border border-gray-400" />
+                        <div className="flex-1 bg-[#f9f9f9] rounded-md p-4">
+                          <span className="text-sm font-bold text-[#555555] mb-1">{comment.author}</span>
+                          <div className="text-sm text-[#555555]" dangerouslySetInnerHTML={{ __html: comment.content }} />
+                        </div>
                       </div>
-                    </div>
-                  ))}
+                    );
+                  })}
                 </div>
               )}
               {showQrCode && (
-                <div className="mt-6 flex justify-end items-center  "> 
+                <div className="mt-6 flex justify-end items-center">
                   <div className='flex flex-row gap-3 items-center justify-center text-lg'>
                     <div className='flex flex-col items-center justify-center text-lg'>
                       <div>长按扫码</div>
@@ -236,11 +263,11 @@ export default function DeltaFlyerPage() {
                 </div>
               )}
               <div className="w-full mt-4">
-                <footer className="bg-[#f9f9f9] rounded-md   p-2"> 
-                    <div className="text-gray-700 text-lg text-center">
-                      Chrome扩展商店搜 <span className='text-orange-700'>v2ex share </span>一键分享
-                    </div>
-                 </footer>
+                <footer className="bg-[#f9f9f9] rounded-md p-2">
+                  <div className="text-gray-700 text-lg text-center">
+                    Chrome扩展商店搜 <span className='text-orange-700'>v2ex share </span>一键分享
+                  </div>
+                </footer>
               </div>
             </div>
           </Watermark>
@@ -252,5 +279,3 @@ export default function DeltaFlyerPage() {
     </div>
   );
 }
-
-
