@@ -8,39 +8,14 @@ export const config: PlasmoCSConfig = {
 
 let comments: NodeListOf<Element> | null = null;
 const style = document.createElement("style");
-style.textContent = `
-    .custom-checkbox {
-      margin-right: 10px;
-      margin-top: 10px; 
-      width: 20px;
-      height: 20px;
-      cursor: pointer;
-      accent-color: #007BFF;
-      border: 2px solid #007BFF;
-      border-radius: 4px;
-    }
-    .custom-checkbox:checked {
-      background-color: #007BFF;
-    }
+style.textContent = ` 
     .topic_buttons {
       padding: 5px;
       font-size: 14px;
       line-height: 120%;
       border-radius: 0 0 3px 3px;
       text-align: left;
-    }
-    .custom-button {
-      position: fixed;
-      bottom: 20px;
-      right: 20px;
-      z-index: 1000;
-      padding: 10px 20px;
-      background-color: #dc503e;
-      color: white;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-    }
+    } 
   `;
 document.head.append(style);
 
