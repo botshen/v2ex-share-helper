@@ -237,6 +237,7 @@ export default function DeltaFlyerPage() {
                           <input
                             type="checkbox"
                             className="mr-2"
+                            style={{ width: '20px', height: '20px' }}  // 调整勾选框的大小 
                             checked={selectedComments.has(index)}
                             onChange={() => handleCommentChange(index)}
                           />
