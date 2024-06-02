@@ -1,6 +1,6 @@
 import { ReloadIcon } from "@radix-ui/react-icons";
 import download from 'downloadjs';
-import { Resizable } from 're-resizable'; 
+import { Resizable } from 're-resizable';
 import { toPng } from 'html-to-image';
 import { useState } from "react";
 import toast, { Toaster } from 'react-hot-toast';
@@ -36,7 +36,7 @@ export default function DeltaFlyerPage() {
   const handleThemeChange = (color: string) => {
     setThemeColor(color);
   };
-  
+
   const handleMessage = (message: any) => {
     if (message.action === "showPostContent") {
       const { postContent, title, author, avatarUrl, comments, postscripts, url } = message.data;
@@ -111,78 +111,97 @@ export default function DeltaFlyerPage() {
 
   return (
     <div className={`flex flex-col items-center p-6 min-h-screen bg-slate-300`}>
-      <div className="fixed top-5 right-5 flex flex-col justify-center p-4 gap-4 z-50 bg-white border-black rounded-lg">
-        <Button disabled={loading || !previewMode} onClick={copyImageToClipboard}>
+       <div className="fixed top-5 right-5 flex flex-col justify-center p-4 gap-4 z-50 bg-white border-black rounded-lg shadow-lg">
+        <Button
+          className={loading || !previewMode ? "bg-gray-400 text-gray-700 cursor-not-allowed" : "bg-blue-500 hover:bg-blue-700 text-white font-bold"}
+          disabled={loading || !previewMode} 
+          onClick={copyImageToClipboard}
+        >
           {loading && <ReloadIcon className="mr-2 h-4 w-4 animate-spin" />}
           复制为图片
         </Button>
-        <Button onClick={downloadImage} disabled={loadingDownload || !previewMode}>
+        <Button 
+          className={loadingDownload || !previewMode ? "bg-gray-400 text-gray-700 cursor-not-allowed" : "bg-green-500 hover:bg-green-700 text-white font-bold"}
+          onClick={downloadImage} 
+          disabled={loadingDownload || !previewMode}
+        >
           {loadingDownload && <ReloadIcon className="mr-2 h-4 w-4 animate-spin" />}
           保存为图片
         </Button>
-        <Button variant="destructive" onClick={togglePreviewMode}>
+        <Button 
+          className="bg-red-500 hover:bg-red-700 text-white font-bold" 
+          variant="destructive" 
+          onClick={togglePreviewMode}
+        >
           {previewMode ? "退出预览" : "预览图片"}
         </Button>
         {postContent.length > 0 && (
           <div className="flex items-center gap-2">
             <input
-              className="w-4 h-4 text-gray-800 bg-gray-700 border-gray-600"
+              className="w-4 h-4 text-gray-800 bg-gray-700 border-gray-600 rounded"
               type="checkbox"
               checked={showPost}
               onChange={(e) => setShowPost(e.target.checked)}
             />
-            显示正文
+            <span className="text-sm">显示正文</span>
           </div>
         )}
         {postscripts.length > 0 && (
           <div className="flex items-center gap-2">
             <input
-              className="w-4 h-4 text-gray-800 bg-gray-700 border-gray-600"
+              className="w-4 h-4 text-gray-800 bg-gray-700 border-gray-600 rounded"
               type="checkbox"
               checked={showSubPost}
               onChange={(e) => setShowSubPost(e.target.checked)}
             />
-            显示附言
+            <span className="text-sm">显示附言</span>
           </div>
         )}
         {comments.length > 0 && (
           <div className="flex items-center gap-2">
             <input
-              className="w-4 h-4 text-gray-800 bg-gray-700 border-gray-600"
+              className="w-4 h-4 text-gray-800 bg-gray-700 border-gray-600 rounded"
               type="checkbox"
               checked={showComments}
               onChange={(e) => setShowComments(e.target.checked)}
             />
-            显示评论
+            <span className="text-sm">显示评论</span>
           </div>
         )}
         <div className="flex items-center gap-2">
           <input
-            className="w-4 h-4 text-gray-800 bg-gray-700 border-gray-600"
+            className="w-4 h-4 text-gray-800 bg-gray-700 border-gray-600 rounded"
             type="checkbox"
             checked={showQrCode}
             onChange={(e) => setShowQrCode(e.target.checked)}
           />
-          显示二维码
+          <span className="text-sm">显示二维码</span>
         </div>
       </div>
 
       <div className="fixed top-5 left-5 flex flex-col justify-center p-4 gap-4 z-50 bg-white border-black rounded-lg">
-        配色：
-        <div>
-          <button onClick={() => handleThemeChange('white')}>白色</button>
-        </div>
-        <div>
-          <button onClick={() => handleThemeChange('green')}>绿色</button>
-        </div>
-        <div>
-          <button onClick={() => handleThemeChange('yellow')}>黄色</button>
-        </div>
-        <div>
-          <button onClick={() => handleThemeChange('gray')}>灰色</button>
-        </div>
-        <div>
-          <button onClick={() => handleThemeChange('black')}>黑色</button>
+        <div className="text-lg font-semibold mb-2">选择主题颜色:</div>
+        <div className="grid grid-cols-3 gap-2">
+          <button
+            className={`w-8 h-8 rounded-full border-2 bg-white border-gray-950 `}
+            onClick={() => handleThemeChange('white')}
+          ></button>
+          <button
+            className={`w-8 h-8 rounded-full border-2 bg-green-100 border-gray-950 `}
+            onClick={() => handleThemeChange('green')}
+          ></button>
+          <button
+            className={`w-8 h-8 rounded-full border-2 bg-yellow-100 border-gray-950 `}
+            onClick={() => handleThemeChange('yellow')}
+          ></button>
+          <button
+            className={`w-8 h-8 rounded-full border-2 bg-gray-500 border-gray-950 `}
+            onClick={() => handleThemeChange('gray')}
+          ></button>
+          <button
+            className={`w-8 h-8 rounded-full border-2 bg-black border-gray-950 `}
+            onClick={() => handleThemeChange('black')}
+          ></button>
         </div>
       </div>
 
