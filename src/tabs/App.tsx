@@ -1,11 +1,10 @@
-import { Watermark } from '@hirohe/react-watermark';
 import { ReloadIcon } from "@radix-ui/react-icons";
 import download from 'downloadjs';
-import { Resizable } from 're-resizable';
-
+import { Resizable } from 're-resizable'; 
 import { toPng } from 'html-to-image';
 import { useState } from "react";
 import toast, { Toaster } from 'react-hot-toast';
+import { CommentsSection } from '~components/CommentsSection';
 import { Footer } from '~components/Footer';
 import { Header } from '~components/Header';
 import { PostContent } from '~components/PostContent';
@@ -14,7 +13,6 @@ import { SubPost } from '~components/SubPost';
 import { Button } from "~components/ui/button";
 import { toastStyles } from '~const';
 import '../style.css';
-import { CommentsSection } from '~components/CommentsSection';
 const notify = () => toast('已复制到剪贴板📋', { icon: '✅' });
 
 export default function DeltaFlyerPage() {
@@ -33,7 +31,12 @@ export default function DeltaFlyerPage() {
   const [loadingDownload, setLoadingloadingDownload] = useState<boolean>(false);
   const [previewMode, setPreviewMode] = useState<boolean>(false);
   const [selectedComments, setSelectedComments] = useState<Set<number>>(new Set());
+  const [themeColor, setThemeColor] = useState<string>('white'); // 添加主题颜色状态
 
+  const handleThemeChange = (color: string) => {
+    setThemeColor(color);
+  };
+  
   const handleMessage = (message: any) => {
     if (message.action === "showPostContent") {
       const { postContent, title, author, avatarUrl, comments, postscripts, url } = message.data;
@@ -46,6 +49,7 @@ export default function DeltaFlyerPage() {
       setUrl(url)
     }
   };
+
   chrome.runtime.onMessage.addListener(handleMessage);
 
   const handleCommentChange = (index: number) => {
@@ -106,21 +110,21 @@ export default function DeltaFlyerPage() {
   };
 
   return (
-    <div className="flex flex-col items-center p-6 min-h-screen bg-slate-300" >
+    <div className={`flex flex-col items-center p-6 min-h-screen bg-slate-300`}>
       <div className="fixed top-5 right-5 flex flex-col justify-center p-4 gap-4 z-50 bg-white border-black rounded-lg">
-        <Button disabled={loading || !previewMode} onClick={copyImageToClipboard} >
-          {
-            loading && <ReloadIcon className="mr-2 h-4 w-4 animate-spin" />
-          }
-          复制为图片</Button>
-        <Button onClick={downloadImage} disabled={loadingDownload || !previewMode} >
-          {
-            loadingDownload && <ReloadIcon className="mr-2 h-4 w-4 animate-spin" />
-          }
-          保存为图片</Button>
-        <Button variant="destructive" onClick={togglePreviewMode} >{previewMode ? "退出预览" : "预览图片"}</Button>
-        {
-          postContent.length > 0 && <div className="flex items-center gap-2">
+        <Button disabled={loading || !previewMode} onClick={copyImageToClipboard}>
+          {loading && <ReloadIcon className="mr-2 h-4 w-4 animate-spin" />}
+          复制为图片
+        </Button>
+        <Button onClick={downloadImage} disabled={loadingDownload || !previewMode}>
+          {loadingDownload && <ReloadIcon className="mr-2 h-4 w-4 animate-spin" />}
+          保存为图片
+        </Button>
+        <Button variant="destructive" onClick={togglePreviewMode}>
+          {previewMode ? "退出预览" : "预览图片"}
+        </Button>
+        {postContent.length > 0 && (
+          <div className="flex items-center gap-2">
             <input
               className="w-4 h-4 text-gray-800 bg-gray-700 border-gray-600"
               type="checkbox"
@@ -129,9 +133,9 @@ export default function DeltaFlyerPage() {
             />
             显示正文
           </div>
-        }
-        {
-          postscripts.length > 0 && <div className="flex items-center gap-2">
+        )}
+        {postscripts.length > 0 && (
+          <div className="flex items-center gap-2">
             <input
               className="w-4 h-4 text-gray-800 bg-gray-700 border-gray-600"
               type="checkbox"
@@ -140,9 +144,9 @@ export default function DeltaFlyerPage() {
             />
             显示附言
           </div>
-        }
-        {
-          comments.length > 0 && <div className="flex items-center gap-2">
+        )}
+        {comments.length > 0 && (
+          <div className="flex items-center gap-2">
             <input
               className="w-4 h-4 text-gray-800 bg-gray-700 border-gray-600"
               type="checkbox"
@@ -151,7 +155,7 @@ export default function DeltaFlyerPage() {
             />
             显示评论
           </div>
-        }
+        )}
         <div className="flex items-center gap-2">
           <input
             className="w-4 h-4 text-gray-800 bg-gray-700 border-gray-600"
@@ -162,43 +166,53 @@ export default function DeltaFlyerPage() {
           显示二维码
         </div>
       </div>
+
+      <div className="fixed top-5 left-5 flex flex-col justify-center p-4 gap-4 z-50 bg-white border-black rounded-lg">
+        配色：
+        <div>
+          <button onClick={() => handleThemeChange('white')}>白色</button>
+        </div>
+        <div>
+          <button onClick={() => handleThemeChange('green')}>绿色</button>
+        </div>
+        <div>
+          <button onClick={() => handleThemeChange('yellow')}>黄色</button>
+        </div>
+        <div>
+          <button onClick={() => handleThemeChange('gray')}>灰色</button>
+        </div>
+        <div>
+          <button onClick={() => handleThemeChange('black')}>黑色</button>
+        </div>
+      </div>
+
       <Resizable
         resizeRatio={[2, 1]}
-        defaultSize={{
-          width: 448
-        }}
+        defaultSize={{ width: 448 }}
         minWidth={390}
         maxWidth={1000}
         handleComponent={{
-          right: (
-            <div className="absolute top-0 right-0 h-full w-2 bg-[#101729] cursor-ew-resize"></div>
-          ),
+          right: <div className="absolute top-0 right-0 h-full w-2 bg-[#101729] cursor-ew-resize"></div>,
         }}
-        enable={{
-          right: previewMode ? false : true,
-        }}
+        enable={{ right: previewMode ? false : true }}
       >
-        <div id="post-content" className="bg-white p-6 shadow-md">
-          <div>
-            <Header title={title} avatarUrl={avatarUrl} author={author} />
-            {showPost && <PostContent postContent={postContent} />}
-            {showSubPost && <SubPost postscripts={postscripts} />}
-            {showComments && comments.length > 0 && (
-              <CommentsSection
-                comments={comments}
-                previewMode={previewMode}
-                selectedComments={selectedComments}
-                handleCommentChange={handleCommentChange}
-              />
-            )}
-            {showQrCode && <QrCode url={url} />}
-            <Footer />
-          </div>
+        <div id="post-content" className={`p-6 shadow-md theme-${themeColor}`}>
+          <Header title={title} avatarUrl={avatarUrl} author={author} />
+          {showPost && <PostContent postContent={postContent} />}
+          {showSubPost && <SubPost postscripts={postscripts} />}
+          {showComments && comments.length > 0 && (
+            <CommentsSection
+              comments={comments}
+              previewMode={previewMode}
+              selectedComments={selectedComments}
+              handleCommentChange={handleCommentChange}
+            />
+          )}
+          {showQrCode && <QrCode url={url} />}
+          <Footer />
         </div>
       </Resizable>
-      <Toaster toastOptions={{
-        style: toastStyles,
-      }} />
+      <Toaster toastOptions={{ style: toastStyles }} />
     </div>
   );
 }

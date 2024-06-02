@@ -16,7 +16,7 @@ interface CommentsSectionProps {
 export const CommentsSection: React.FC<CommentsSectionProps> = ({ comments, previewMode, selectedComments, handleCommentChange }) => {
   return (
     <div className="mt-6">
-      <h3 className="text-xl font-bold text-[#333333] mb-2">精选评论</h3>
+      <h3 className="text-xl font-bold mb-2">精选评论</h3>
       {comments.map((comment, index) => {
         if (previewMode && !selectedComments.has(index)) {
           return null; // 预览模式下未勾选的评论不显示
@@ -33,9 +33,9 @@ export const CommentsSection: React.FC<CommentsSectionProps> = ({ comments, prev
               />
             )}
             <img src={comment.avatarUrl} alt="头像" className="w-8 h-8 rounded-full mr-2 border border-gray-400" />
-            <div className="flex-1 bg-[#f9f9f9] rounded-md p-4">
-              <span className="text-sm font-bold text-[#555555] mb-1">{comment.author}</span>
-              <div className="text-sm text-[#555555]" dangerouslySetInnerHTML={{ __html: comment.content }} />
+            <div className="flex-1 comment-bg shadow-md rounded-md p-4">
+              <span className="text-sm font-bold  mb-1">{comment.author}</span>
+              <div className="text-sm" dangerouslySetInnerHTML={{ __html: comment.content }} />
             </div>
           </div>
         );

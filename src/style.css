@@ -137,7 +137,6 @@ a:visited {
 
 .cited_reply {
   scale: .85;
-  background-color: #f5f5f5;
   border: 1px solid #e2e2e2;
   white-space: initial;
   padding: 10px;
@@ -152,4 +151,51 @@ a:visited {
 .reply_content{
   transform: translateY(-11px);
   font-size: 16px;
+}
+
+/* style.css */
+
+.theme-white {
+  background-color: #ffffff;
+  color: #262626; /* 根据需要调整字体颜色 */
+}
+
+.theme-green {
+  background-color: #d2e9bd;
+  color: #333333; /* 根据需要调整字体颜色 */
+}
+
+.theme-yellow {
+  background-color: #f3ecda;
+  color: #584738; /* 根据需要调整字体颜色 */
+}
+
+.theme-gray {
+  background-color: #45484a;
+  color: #9d9fa3; /* 根据需要调整字体颜色 */
+}
+
+.theme-black {
+  background-color: #333333;
+  color: #b4aca3; /* 根据需要调整字体颜色 */
+}
+/* style.css */
+.theme-white .comment-bg {
+  background-color: #f9f9f9; /* 适合白色主题的评论背景色 */
+}
+
+.theme-green .comment-bg {
+  background-color: #e0f2db; /* 适合绿色主题的评论背景色 */
+}
+
+.theme-yellow .comment-bg {
+  background-color: #f5f0e1; /* 适合黄色主题的评论背景色 */
+}
+
+.theme-gray .comment-bg {
+  background-color: #5a5d5f; /* 适合灰色主题的评论背景色 */
+}
+
+.theme-black .comment-bg {
+  background-color: #444444; /* 适合黑色主题的评论背景色 */
 }
