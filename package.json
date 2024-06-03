@@ -1,7 +1,7 @@
 {
   "name": "v2ex-share",
   "displayName": "v2ex share",
-  "version": "0.0.8",
+  "version": "0.0.9",
   "description": "一个能让你分享高大上的分享V2ex的工具，带你装逼带你飞！",
   "author": "botshen",
   "scripts": {

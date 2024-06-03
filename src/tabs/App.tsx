@@ -111,26 +111,26 @@ export default function DeltaFlyerPage() {
 
   return (
     <div className={`flex flex-col items-center p-6 min-h-screen bg-slate-300`}>
-       <div className="fixed top-5 right-5 flex flex-col justify-center p-4 gap-4 z-50 bg-white border-black rounded-lg shadow-lg">
+      <div className="fixed top-5 right-5 flex flex-col justify-center p-4 gap-4 z-50 bg-white border-black rounded-lg shadow-lg">
         <Button
           className={loading || !previewMode ? "bg-gray-400 text-gray-700 cursor-not-allowed" : "bg-blue-500 hover:bg-blue-700 text-white font-bold"}
-          disabled={loading || !previewMode} 
+          disabled={loading || !previewMode}
           onClick={copyImageToClipboard}
         >
           {loading && <ReloadIcon className="mr-2 h-4 w-4 animate-spin" />}
           复制为图片
         </Button>
-        <Button 
+        <Button
           className={loadingDownload || !previewMode ? "bg-gray-400 text-gray-700 cursor-not-allowed" : "bg-green-500 hover:bg-green-700 text-white font-bold"}
-          onClick={downloadImage} 
+          onClick={downloadImage}
           disabled={loadingDownload || !previewMode}
         >
           {loadingDownload && <ReloadIcon className="mr-2 h-4 w-4 animate-spin" />}
           保存为图片
         </Button>
-        <Button 
-          className="bg-red-500 hover:bg-red-700 text-white font-bold" 
-          variant="destructive" 
+        <Button
+          className="bg-red-500 hover:bg-red-700 text-white font-bold"
+          variant="destructive"
           onClick={togglePreviewMode}
         >
           {previewMode ? "退出预览" : "预览图片"}
@@ -218,7 +218,7 @@ export default function DeltaFlyerPage() {
         <div id="post-content" className={`p-6 shadow-md theme-${themeColor}`}>
           <Header title={title} avatarUrl={avatarUrl} author={author} />
           {showPost && <PostContent postContent={postContent} />}
-          {showSubPost && <SubPost postscripts={postscripts} />}
+          {showSubPost && postscripts.length > 0 && <SubPost postscripts={postscripts} />}
           {showComments && comments.length > 0 && (
             <CommentsSection
               comments={comments}

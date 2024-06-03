@@ -143,6 +143,10 @@ a:visited {
   border-radius: 4px;
 }
 
+.cited_reply td:first-child {
+  vertical-align: middle;
+}
+
 .avatar{
   border-radius: 50%;
   width: 30px;
