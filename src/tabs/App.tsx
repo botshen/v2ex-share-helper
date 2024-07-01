@@ -14,6 +14,7 @@ import { Button } from "~components/ui/button";
 import { toastStyles } from '~const';
 import '../style.css';
 const notify = () => toast('已复制到剪贴板📋', { icon: '✅' });
+const notifyCopyUrl = () => toast('URL已复制到剪贴板📋', { icon: '✅' });
 
 export default function DeltaFlyerPage() {
   const [postContent, setPostContent] = useState<string>("");
@@ -109,6 +110,15 @@ export default function DeltaFlyerPage() {
     }
   };
 
+  const copyUrlToClipboard = async () => {
+    try {
+      await navigator.clipboard.writeText(url);
+      notifyCopyUrl();
+    } catch (error) {
+      console.error('复制URL失败:', error);
+    }
+  };
+
   return (
     <div className={`flex flex-col items-center p-6 min-h-screen bg-slate-300`}>
       <div className="fixed top-5 right-5 flex flex-col justify-center p-4 gap-4 z-50 bg-white border-black rounded-lg shadow-lg">
@@ -177,6 +187,24 @@ export default function DeltaFlyerPage() {
           />
           <span className="text-sm">显示二维码</span>
         </div>
+        {url && (
+          <div className="flex flex-col items-start gap-2 mt-4">
+            <span className="text-gray-700">文章链接:</span>
+            <div className="flex items-center gap-2">
+              <input
+                className="border p-2 w-full text-gray-700"
+                value={url}
+                readOnly
+              />
+              <Button
+                className="bg-blue-500 hover:bg-blue-700 text-white font-bold"
+                onClick={copyUrlToClipboard}
+              >
+                复制URL
+              </Button>
+            </div>
+          </div>
+        )}
       </div>
 
       <div className="fixed top-5 left-5 flex flex-col justify-center p-4 gap-4 z-50 bg-white border-black rounded-lg">

@@ -14,8 +14,14 @@ interface CommentsSectionProps {
 }
 
 export const CommentsSection: React.FC<CommentsSectionProps> = ({ comments, previewMode, selectedComments, handleCommentChange }) => {
+    // 检查在预览模式下是否有选中的评论
+    const hasSelectedComments = previewMode ? Array.from(selectedComments).some(index => comments[index]) : true;
+
+    if (!hasSelectedComments) {
+      return null; // 如果在预览模式下没有选中的评论，则不渲染任何内容
+    }
   return (
-    <div className="mt-6">
+    <div className="mt-6"> 
       <h3 className="text-xl font-bold mb-2">精选评论</h3>
       {comments.map((comment, index) => {
         if (previewMode && !selectedComments.has(index)) {
