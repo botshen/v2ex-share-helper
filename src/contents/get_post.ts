@@ -88,7 +88,7 @@ function cleanHTMLContent(html: string): string {
 function sharePostContent() {
   console.log('开始分享帖子内容');
 
-  const postContentElement = document.querySelector(".topic_content");
+  const postContentElement = document.querySelector(".topic_content:not(.markdown_body)");
   let postContent = postContentElement ? postContentElement.innerHTML : "";
   postContent = cleanHTMLContent(postContent);
 
