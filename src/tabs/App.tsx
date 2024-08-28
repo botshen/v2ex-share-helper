@@ -1,9 +1,9 @@
 import { ReloadIcon } from "@radix-ui/react-icons";
 import download from 'downloadjs';
-import { Resizable } from 're-resizable';
 import { toPng } from 'html-to-image';
+import { Resizable } from "re-resizable";
 import { useState } from "react";
-import toast, { Toaster } from 'react-hot-toast';
+import toast, { Toaster } from "react-hot-toast";
 import { CommentsSection } from '~components/CommentsSection';
 import { Footer } from '~components/Footer';
 import { Header } from '~components/Header';
@@ -14,6 +14,7 @@ import { Button } from "~components/ui/button";
 import { toastStyles } from '~const';
 import '../style.css';
 const notify = () => toast('已复制到剪贴板📋', { icon: '✅' });
+const notifyError = () => toast('复制图片失败', { icon: '❌' });
 const notifyCopyUrl = () => toast('URL已复制到剪贴板📋', { icon: '✅' });
 
 export default function DeltaFlyerPage() {
@@ -67,6 +68,7 @@ export default function DeltaFlyerPage() {
     setPreviewMode(!previewMode);
   };
 
+
   const copyImageToClipboard = async () => {
     const element = document.getElementById("post-content");
     if (element) {
@@ -75,6 +77,7 @@ export default function DeltaFlyerPage() {
         const dataUrl = await toPng(element, {
           fetchRequestInit: {
             cache: 'no-cache',
+            mode: "no-cors"
           },
         });
         const blob = await (await fetch(dataUrl)).blob();
@@ -85,9 +88,11 @@ export default function DeltaFlyerPage() {
       } catch (error) {
         console.error('复制图片失败:', error);
         setLoading(false);
+        notifyError()
       }
     }
   };
+
 
   const downloadImage = async () => {
     const element = document.getElementById("post-content");
@@ -97,6 +102,7 @@ export default function DeltaFlyerPage() {
         const dataUrl = await toPng(element, {
           fetchRequestInit: {
             cache: 'no-cache',
+            mode: "no-cors"
           },
         });
         setLoadingloadingDownload(false)
