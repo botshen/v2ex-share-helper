@@ -28,6 +28,7 @@ export default function DeltaFlyerPage() {
   const [showSubPost, setShowSubPost] = useState<boolean>(true);
   const [showComments, setShowComments] = useState<boolean>(true);
   const [showPost, setShowPost] = useState<boolean>(true);
+  const [showAllComments, setShowAllComments] = useState<boolean>(false);
   const [url, setUrl] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
   const [loadingDownload, setLoadingloadingDownload] = useState<boolean>(false);
@@ -115,7 +116,14 @@ export default function DeltaFlyerPage() {
       }
     }
   };
-
+  const handleShowAllComments = (checked: boolean) => {
+    setShowAllComments(checked);
+    if (checked) {
+      setSelectedComments(new Set(comments.map((_, index) => index)));
+    } else {
+      setSelectedComments(new Set());
+    } 
+  };
   const copyUrlToClipboard = async () => {
     try {
       await navigator.clipboard.writeText(url);
@@ -182,6 +190,17 @@ export default function DeltaFlyerPage() {
               onChange={(e) => setShowComments(e.target.checked)}
             />
             <span className="text-sm">显示评论</span>
+          </div>
+        )}
+        {comments.length > 0 && (
+          <div className="flex items-center gap-2">
+            <input
+              className="w-4 h-4 text-gray-800 bg-gray-700 border-gray-600 rounded"
+              type="checkbox"
+              checked={showAllComments}
+              onChange={(e) => handleShowAllComments(e.target.checked)}
+            />
+            <span className="text-sm">全选评论</span>
           </div>
         )}
         <div className="flex items-center gap-2">
