@@ -16,7 +16,7 @@ import '../style.css';
 const notify = () => toast('已复制到剪贴板📋', { icon: '✅' });
 const notifyError = () => toast('复制图片失败', { icon: '❌' });
 const notifyCopyUrl = () => toast('URL已复制到剪贴板📋', { icon: '✅' });
-
+import './app.css';
 export default function DeltaFlyerPage() {
   const [postContent, setPostContent] = useState<string>("");
   const [title, setTitle] = useState<string>("");
@@ -69,53 +69,104 @@ export default function DeltaFlyerPage() {
     setPreviewMode(!previewMode);
   };
 
+  const convertImageToBase64 = async (imgUrl: string): Promise<string> => {
+    try {
+      // 使用 chrome.runtime.getURL 来避免跨域问题
+      const response = await fetch(imgUrl);
+      const blob = await response.blob();
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onloadend = () => resolve(reader.result as string);
+        reader.onerror = reject;
+        reader.readAsDataURL(blob);
+      });
+    } catch (error) {
+      console.error('转换图片失败:', error);
+      return '';
+    }
+  };
 
   const copyImageToClipboard = async () => {
     const element = document.getElementById("post-content");
     if (element) {
       try {
         setLoading(true);
+        
+        const { width, height } = element.getBoundingClientRect();
+        
         const dataUrl = await toPng(element, {
           fetchRequestInit: {
             cache: 'no-cache',
-            mode: "no-cors"
           },
+          pixelRatio: 3,
+          quality: 1,
+          width: width,
+          height: height,
+          style: {
+            transform: 'scale(1)',
+            transformOrigin: 'top left'
+          },
+          filter: (node) => {
+            if (node instanceof HTMLElement) {
+              node.style.textRendering = 'optimizeLegibility';
+              node.style.webkitFontSmoothing = 'antialiased';
+            }
+            return true;
+          }
         });
+        
         const blob = await (await fetch(dataUrl)).blob();
         const item = new ClipboardItem({ "image/png": blob });
         await navigator.clipboard.write([item]);
         setLoading(false);
-        notify()
+        notify();
       } catch (error) {
         console.error('复制图片失败:', error);
         setLoading(false);
-        notifyError()
+        notifyError();
       }
     }
   };
-
 
   const downloadImage = async () => {
     const element = document.getElementById("post-content");
     if (element) {
       try {
-        setLoadingloadingDownload(true)
+        setLoadingloadingDownload(true);
+        
+        // 预处理所有第三方图片
+        const images = element.getElementsByTagName('img');
+        for (const img of images) {
+          if (img.getAttribute('rel') === 'noreferrer') {
+            const base64Url = await convertImageToBase64(img.src);
+            if (base64Url) {
+              img.src = base64Url;
+              img.removeAttribute('rel');
+            }
+          }
+        }
+
         const dataUrl = await toPng(element, {
           fetchRequestInit: {
             cache: 'no-cache',
-            mode: "no-cors"
           },
+          pixelRatio: 2,
+          quality: 1,
+          style: {
+            transform: 'scale(1)',
+            transformOrigin: 'top left'
+          }
         });
-        setLoadingloadingDownload(false)
-
+        
+        setLoadingloadingDownload(false);
         download(dataUrl, 'v2ex.png');
       } catch (error) {
         console.error('下载图片失败:', error);
-        setLoadingloadingDownload(false)
-
+        setLoadingloadingDownload(false);
       }
     }
   };
+
   const handleShowAllComments = (checked: boolean) => {
     setShowAllComments(checked);
     if (checked) {
@@ -124,6 +175,7 @@ export default function DeltaFlyerPage() {
       setSelectedComments(new Set());
     } 
   };
+
   const copyUrlToClipboard = async () => {
     try {
       await navigator.clipboard.writeText(url);

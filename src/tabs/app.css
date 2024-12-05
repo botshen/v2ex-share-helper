@@ -1,0 +1,26 @@
+#post-content {
+  /* 使用系统默认的字体渲染方式，移除过度优化 */
+  font-family:
+    ui-sans-serif,
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    Roboto,
+    "Helvetica Neue",
+    Arial,
+    "Noto Sans",
+    sans-serif,
+    "Apple Color Emoji",
+    "Segoe UI Emoji",
+    "Segoe UI Symbol" !important;
+
+  /* 优化文字间距和行高 */
+  letter-spacing: 0.015em !important;
+  line-height: 1.75 !important;
+
+  /* 添加适当的文字大小和颜色 */
+  @apply text-base text-gray-800 dark:text-gray-200;
+}
+
+/* 移除之前对所有子元素的强制渲染优化 */

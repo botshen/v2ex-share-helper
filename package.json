@@ -32,7 +32,7 @@
   },
   "devDependencies": {
     "@ianvs/prettier-plugin-sort-imports": "4.1.1",
-    "@tailwindcss/typography": "^0.5.10",
+    "@tailwindcss/typography": "^0.5.13",
     "@types/chrome": "0.0.258",
     "@types/node": "20.11.5",
     "@types/react": "18.2.48",
@@ -45,7 +45,8 @@
   },
   "manifest": {
     "host_permissions": [
-      "*://*.v2ex.com/*"
+      "*://*.v2ex.com/*",
+      "https://*.imgur.com/*"
     ],
     "permissions": [
       "activeTab",

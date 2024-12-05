@@ -1,13 +1,13 @@
-import type { PlasmoCSConfig } from "plasmo";
+import type { PlasmoCSConfig } from "plasmo"
 
 export const config: PlasmoCSConfig = {
   matches: ["*://*.v2ex.com/t/*"],
   all_frames: true,
   run_at: "document_end"
-};
+}
 
-let comments: NodeListOf<Element> | null = null;
-const style = document.createElement("style");
+let comments: NodeListOf<Element> | null = null
+const style = document.createElement("style")
 style.textContent = ` 
     .topic_buttons {
       padding: 5px;
@@ -16,41 +16,43 @@ style.textContent = `
       border-radius: 0 0 3px 3px;
       text-align: left;
     } 
-  `;
-document.head.append(style);
+  `
+document.head.append(style)
 
 // 初始查找所有评论元素
-const mainElement = document.querySelector("#Main");
+const mainElement = document.querySelector("#Main")
 if (mainElement) {
-  const boxes = mainElement.querySelectorAll(".box");
+  const boxes = mainElement.querySelectorAll(".box")
   if (boxes.length > 1) {
-    const secondBox = boxes[1];
-    comments = secondBox.querySelectorAll("[id^='r_']");
+    const secondBox = boxes[1]
+    comments = secondBox.querySelectorAll("[id^='r_']")
   }
 }
 
 // 查找 body > #Wrapper > .content > #Main > 第一个 .box > .box
-const wrapper = document.querySelector("#Wrapper");
+const wrapper = document.querySelector("#Wrapper")
 if (wrapper) {
-  const content = wrapper.querySelector('.content');
+  const content = wrapper.querySelector(".content")
   if (content) {
-    const main = content.querySelector("#Main");
+    const main = content.querySelector("#Main")
     if (main) {
-      const firstBox = main.querySelector(".box") as HTMLElement;
+      const firstBox = main.querySelector(".box") as HTMLElement
       if (firstBox && firstBox.classList.contains("box")) {
-        let topicButtons = firstBox.querySelector(".topic_buttons") as HTMLElement;
+        let topicButtons = firstBox.querySelector(
+          ".topic_buttons"
+        ) as HTMLElement
         if (!topicButtons) {
           // 如果不存在 .topic_buttons 元素，则创建一个新的
-          topicButtons = document.createElement("div");
-          topicButtons.className = "topic_buttons";
-          const lastCell = firstBox.lastElementChild;
+          topicButtons = document.createElement("div")
+          topicButtons.className = "topic_buttons"
+          const lastCell = firstBox.lastElementChild
           if (lastCell) {
-            lastCell.insertAdjacentElement("afterend", topicButtons);
+            lastCell.insertAdjacentElement("afterend", topicButtons)
           } else {
-            firstBox.appendChild(topicButtons);
+            firstBox.appendChild(topicButtons)
           }
         }
-        insertShareButton(topicButtons);
+        insertShareButton(topicButtons)
       }
     }
   }
@@ -58,57 +60,66 @@ if (wrapper) {
 
 // 清理HTML内容，删除所有具有指定class的元素
 function cleanHTMLContent(html: string): string {
-  const container = document.createElement('div');
-  container.innerHTML = html;
-  
+  const container = document.createElement("div")
+  container.innerHTML = html
+
   // 移除 class 为 small fade 的 span 元素
-  const elementsToRemove = container.querySelectorAll("span.small.fade");
-  elementsToRemove.forEach(element => {
-    element.remove();
-  });
+  const elementsToRemove = container.querySelectorAll("span.small.fade")
+  elementsToRemove.forEach((element) => {
+    element.remove()
+  })
 
   // 在 cited_reply 内部，移除 class 为 fr 和 ago 的 div 元素
-  const citedReplies = container.querySelectorAll(".cited_reply");
-  citedReplies.forEach(citedReply => {
-    const frElements = citedReply.querySelectorAll("div.fr");
-    const agoElements = citedReply.querySelectorAll(".ago");
+  const citedReplies = container.querySelectorAll(".cited_reply")
+  citedReplies.forEach((citedReply) => {
+    const frElements = citedReply.querySelectorAll("div.fr")
+    const agoElements = citedReply.querySelectorAll(".ago")
 
-    frElements.forEach(element => {
-      element.remove();
-    });
+    frElements.forEach((element) => {
+      element.remove()
+    })
 
-    agoElements.forEach(element => {
-      element.remove();
-    });
-  });
+    agoElements.forEach((element) => {
+      element.remove()
+    })
+  })
 
-  return container.innerHTML;
+  return container.innerHTML
 }
 
 function sharePostContent() {
-  console.log('开始分享帖子内容');
+  console.log("开始分享帖子内容")
 
-  const postContentElement = document.querySelector(".topic_content:not(.markdown_body)");
-  let postContent = postContentElement ? postContentElement.innerHTML : "";
-  postContent = cleanHTMLContent(postContent);
+  const postContentElement = document.querySelector(
+    ".topic_content:not(.markdown_body)"
+  )
+  let postContent = postContentElement ? postContentElement.innerHTML : ""
+  postContent = cleanHTMLContent(postContent)
+  const titleElement = document.querySelector(
+    "#Wrapper .content #Main .box .header h1"
+  )
+  const title = titleElement ? titleElement.textContent : "未找到标题"
 
-  const titleElement = document.querySelector("#Wrapper .content #Main .box .header h1");
-  const title = titleElement ? titleElement.textContent : "未找到标题";
+  const authorElement = document.querySelector(
+    "#Wrapper .content #Main .box .header small a"
+  )
+  const author = authorElement ? authorElement.textContent : "未找到作者"
 
-  const authorElement = document.querySelector("#Wrapper .content #Main .box .header small a");
-  const author = authorElement ? authorElement.textContent : "未找到作者";
+  const avatarElement = document.querySelector(
+    "#Wrapper .content #Main .box .header img"
+  ) as HTMLImageElement
+  const avatarUrl = avatarElement ? avatarElement.src : "未找到头像"
 
-  const avatarElement = document.querySelector("#Wrapper .content #Main .box .header img") as HTMLImageElement;
-  const avatarUrl = avatarElement ? avatarElement.src : "未找到头像";
-
-  const postscriptElements = document.querySelectorAll("#Wrapper .content #Main .box .subtle .topic_content");
-  const postscripts = Array.from(postscriptElements).map(element => ({
+  const postscriptElements = document.querySelectorAll(
+    "#Wrapper .content #Main .box .subtle .topic_content"
+  )
+  const postscripts = Array.from(postscriptElements).map((element) => ({
     content: cleanHTMLContent((element as HTMLElement).innerHTML)
-  }));
+  }))
 
-  const checkedComments = collectCheckedComments();
-  const currentPageUrl = window.location.href;
-
+  const checkedComments = collectCheckedComments()
+  console.log("checkedComments", checkedComments)
+  const currentPageUrl = window.location.href
   chrome.runtime.sendMessage({
     action: "openNewTab",
     data: {
@@ -120,43 +131,52 @@ function sharePostContent() {
       postscripts,
       url: currentPageUrl
     }
-  });
+  })
 }
 
 function insertShareButton(container: HTMLElement) {
   if (container.querySelector(".tb.share-button")) {
-    return;
+    return
   }
 
-  const shareTextButton = document.createElement("a");
-  shareTextButton.href = "#;";
-  shareTextButton.className = "tb share-button";
-  shareTextButton.textContent = "分享帖子";
-  shareTextButton.style.marginRight = "10px";
-  shareTextButton.style.marginLeft = "10px";
-  shareTextButton.addEventListener("click", sharePostContent);
+  const shareTextButton = document.createElement("a")
+  shareTextButton.href = "#;"
+  shareTextButton.className = "tb share-button"
+  shareTextButton.textContent = "分享帖子"
+  shareTextButton.style.marginRight = "10px"
+  shareTextButton.style.marginLeft = "10px"
+  shareTextButton.addEventListener("click", sharePostContent)
 
-  container.appendChild(shareTextButton);
+  container.appendChild(shareTextButton)
 }
 
 function collectCheckedComments() {
-  const checkedComments = [];
+  const checkedComments = []
   if (comments) {
-    comments.forEach(comment => {
-      const commentElement = comment.querySelector("table") as HTMLElement;
+    comments.forEach((comment) => {
+      const commentElement = comment.querySelector("table") as HTMLElement
       if (commentElement) {
-        const avatarElement = commentElement.querySelector("img.avatar") as HTMLImageElement;
-        const authorElement = commentElement.querySelector("strong a.dark") as HTMLElement;
-        const contentElement = commentElement.querySelector(".reply_content") as HTMLElement;
+        const avatarElement = commentElement.querySelector(
+          "img.avatar"
+        ) as HTMLImageElement
+        const authorElement = commentElement.querySelector(
+          "strong a.dark"
+        ) as HTMLElement
+        const contentElement = commentElement.querySelector(
+          ".reply_content"
+        ) as HTMLElement
 
-        const avatarUrl = avatarElement ? avatarElement.src : "未找到头像";
-        const author = authorElement ? authorElement.textContent : "未找到作者";
-        let content = contentElement ? contentElement.innerHTML : "未找到评论内容";
-        content = cleanHTMLContent(content);
+        const avatarUrl = avatarElement ? avatarElement.src : "未找到头像"
+        const author = authorElement ? authorElement.textContent : "未找到作者"
+        let content = contentElement
+          ? contentElement.innerHTML
+          : "未找到评论内容"
+        content = cleanHTMLContent(content)
 
-        checkedComments.push({ avatarUrl, author, content });
+        checkedComments.push({ avatarUrl, author, content })
       }
-    });
+    })
   }
-  return checkedComments;
+  console.log("checkedComments", checkedComments)
+  return checkedComments
 }
