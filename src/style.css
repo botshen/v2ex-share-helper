@@ -38,9 +38,9 @@
     --gradient-1: linear-gradient(45deg, #2563eb, #3b82f6);
     --gradient-2: linear-gradient(135deg, #6366f1, #8b5cf6);
 
-    --shadow-sm: 0 2px 8px rgba(0,0,0,0.1);
-    --shadow-md: 0 4px 12px rgba(0,0,0,0.15);
-    --shadow-lg: 0 8px 24px rgba(0,0,0,0.2);
+    --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.1);
+    --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.15);
+    --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.2);
   }
 
   .dark {
@@ -84,10 +84,11 @@
 
   body {
     @apply bg-background text-foreground;
-    font-feature-settings: "rlig" 1, "calt" 1;
+    font-feature-settings:
+      "rlig" 1,
+      "calt" 1;
   }
 }
-
 
 body {
   margin: 0;
@@ -108,8 +109,6 @@ h2 {
   font-weight: 800;
 }
 
-
-
 pre {
   white-space: pre-wrap;
   /* 保留空白符序列，同时允许自动换行 */
@@ -127,8 +126,6 @@ code {
   overflow-wrap: break-word;
   /* 允许长单词在必要时换行 */
 }
-
-
 
 img {
   max-width: 100%;
@@ -154,17 +151,16 @@ th {
   padding: 6px 12px;
 }
 
-
 a:active,
 a:link,
 a:visited {
   color: #778087;
   text-decoration: none;
-  word-break: break-word
+  word-break: break-word;
 }
 
 .cited_reply {
-  scale: .85;
+  scale: 0.85;
   border: 1px solid #e2e2e2;
   white-space: initial;
   padding: 10px;
@@ -245,14 +241,26 @@ a:visited {
 
 /* 添加动画效果 */
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 @keyframes pulse {
-  0% { transform: scale(1); }
-  50% { transform: scale(1.05); }
-  100% { transform: scale(1); }
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
+  }
 }
 
 /* 更新组件样式 */
@@ -260,7 +268,7 @@ a:visited {
   @apply backdrop-blur-sm bg-opacity-80;
   animation: fadeIn 0.3s ease-out;
   box-shadow: var(--shadow-sm);
-  border: 1px solid rgba(255,255,255,0.1);
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 /* 按钮样式优化 */
@@ -278,8 +286,8 @@ a:visited {
 /* 卡片样式 */
 .card {
   @apply rounded-xl p-6;
-  background: rgba(255,255,255,0.8);
+  background: rgba(255, 255, 255, 0.8);
   backdrop-filter: blur(12px);
-  border: 1px solid rgba(255,255,255,0.2);
+  border: 1px solid rgba(255, 255, 255, 0.2);
   box-shadow: var(--shadow-md);
 }
