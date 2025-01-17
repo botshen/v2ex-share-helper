@@ -291,3 +291,184 @@ a:visited {
   border: 1px solid rgba(255, 255, 255, 0.2);
   box-shadow: var(--shadow-md);
 }
+/* 新增主题配色 */
+.theme-lavender {
+  background-color: #e6e6fa;
+  color: #4b0082;
+}
+
+.theme-mint {
+  background-color: #f5fffa;
+  color: #2e8b57;
+}
+
+.theme-peach {
+  background-color: #ffdab9;
+  color: #8b4513;
+}
+
+.theme-skyblue {
+  background-color: #e1ffff;
+  color: #191970;
+}
+
+.theme-rose {
+  background-color: #ffe4e1;
+  color: #8b0000;
+}
+
+.theme-cream {
+  background-color: #fffdd0;
+  color: #8b4513;
+}
+
+.theme-lilac {
+  background-color: #dcd0ff;
+  color: #4b0082;
+}
+
+.theme-sage {
+  background-color: #e0eee0;
+  color: #2f4f4f;
+}
+
+.theme-sand {
+  background-color: #f4e4bc;
+  color: #8b4513;
+}
+
+.theme-coral {
+  background-color: #ffe5d4;
+  color: #8b3626;
+}
+
+.theme-slate {
+  background-color: #708090;
+  color: #f0f8ff;
+}
+
+.theme-coffee {
+  background-color: #4a3c31;
+  color: #d2b48c;
+}
+
+.theme-navy {
+  background-color: #000080;
+  color: #e6e6fa;
+}
+
+.theme-forest {
+  background-color: #228b22;
+  color: #f0fff0;
+}
+
+.theme-burgundy {
+  background-color: #800020;
+  color: #ffe4e1;
+}
+
+.theme-teal {
+  background-color: #008080;
+  color: #e0ffff;
+}
+
+.theme-plum {
+  background-color: #673147;
+  color: #ffe4e1;
+}
+
+.theme-khaki {
+  background-color: #f0e68c;
+  color: #4a3c31;
+}
+
+.theme-azure {
+  background-color: #f0ffff;
+  color: #000080;
+}
+
+.theme-terracotta {
+  background-color: #e2725b;
+  color: #fff5ee;
+}
+
+/* 评论背景色 */
+.theme-lavender .comment-bg {
+  background-color: #f0e6ff;
+}
+
+.theme-mint .comment-bg {
+  background-color: #e0fff0;
+}
+
+.theme-peach .comment-bg {
+  background-color: #ffe4d0;
+}
+
+.theme-skyblue .comment-bg {
+  background-color: #f0ffff;
+}
+
+.theme-rose .comment-bg {
+  background-color: #ffe9e9;
+}
+
+.theme-cream .comment-bg {
+  background-color: #fffff0;
+}
+
+.theme-lilac .comment-bg {
+  background-color: #e8e0ff;
+}
+
+.theme-sage .comment-bg {
+  background-color: #eaf2ea;
+}
+
+.theme-sand .comment-bg {
+  background-color: #f9efd6;
+}
+
+.theme-coral .comment-bg {
+  background-color: #ffeee6;
+}
+
+.theme-slate .comment-bg {
+  background-color: #7d8b9a;
+}
+
+.theme-coffee .comment-bg {
+  background-color: #5c4d40;
+}
+
+.theme-navy .comment-bg {
+  background-color: #000099;
+}
+
+.theme-forest .comment-bg {
+  background-color: #2fa02f;
+}
+
+.theme-burgundy .comment-bg {
+  background-color: #900030;
+}
+
+.theme-teal .comment-bg {
+  background-color: #009999;
+}
+
+.theme-plum .comment-bg {
+  background-color: #7b4057;
+}
+
+.theme-khaki .comment-bg {
+  background-color: #f4eba0;
+}
+
+.theme-azure .comment-bg {
+  background-color: #f5ffff;
+}
+
+.theme-terracotta .comment-bg {
+  background-color: #ec8470;
+}

@@ -15,7 +15,6 @@ import { Button } from "~components/ui/button"
 import { toastStyles } from "~const"
 
 import "../style.css"
-import "./app.css"
 
 const notify = () => toast("已复制到剪贴板📋", { icon: "✅" })
 const notifyError = () => toast("复制图片失败", { icon: "❌" })
@@ -205,8 +204,8 @@ export default function DeltaFlyerPage() {
         <Button
           className={
             loading || !previewMode
-              ? "bg-gray-400 text-gray-700 cursor-not-allowed"
-              : "bg-blue-500 hover:bg-blue-700 text-white font-bold"
+              ? "bg-gray-100 text-gray-400 cursor-not-allowed"
+              : "bg-indigo-500 hover:bg-indigo-600 text-white font-medium transition-colors"
           }
           disabled={loading || !previewMode}
           onClick={copyImageToClipboard}>
@@ -216,8 +215,8 @@ export default function DeltaFlyerPage() {
         <Button
           className={
             loadingDownload || !previewMode
-              ? "bg-gray-400 text-gray-700 cursor-not-allowed"
-              : "bg-green-500 hover:bg-green-700 text-white font-bold"
+              ? "bg-gray-100 text-gray-400 cursor-not-allowed"
+              : "bg-violet-500 hover:bg-violet-600 text-white font-medium transition-colors"
           }
           onClick={downloadImage}
           disabled={loadingDownload || !previewMode}>
@@ -227,7 +226,11 @@ export default function DeltaFlyerPage() {
           保存为图片
         </Button>
         <Button
-          className="bg-red-500 hover:bg-red-700 text-white font-bold"
+          className={`${
+            previewMode
+              ? "bg-rose-500 hover:bg-rose-600"
+              : "bg-emerald-500 hover:bg-emerald-600"
+          } text-white font-medium transition-colors`}
           variant="destructive"
           onClick={togglePreviewMode}>
           {previewMode ? "退出预览" : "预览图片"}
@@ -306,22 +309,108 @@ export default function DeltaFlyerPage() {
 
       <div className="fixed top-5 left-5 flex flex-col justify-center p-4 gap-4 z-50 bg-white border-black rounded-lg">
         <div className="text-lg font-semibold mb-2">选择主题颜色:</div>
-        <div className="grid grid-cols-3 gap-2">
+        <div className="grid grid-cols-5 gap-2">
           <button
-            className={`w-8 h-8 rounded-full border-2 bg-white border-gray-950 `}
-            onClick={() => handleThemeChange("white")}></button>
+            className={`w-8 h-8 rounded-full border-2 bg-white border-gray-950`}
+            onClick={() => handleThemeChange("white")}
+          />
           <button
-            className={`w-8 h-8 rounded-full border-2 bg-green-100 border-gray-950 `}
-            onClick={() => handleThemeChange("green")}></button>
+            className={`w-8 h-8 rounded-full border-2 bg-green-100 border-gray-950`}
+            onClick={() => handleThemeChange("green")}
+          />
           <button
-            className={`w-8 h-8 rounded-full border-2 bg-yellow-100 border-gray-950 `}
-            onClick={() => handleThemeChange("yellow")}></button>
+            className={`w-8 h-8 rounded-full border-2 bg-yellow-100 border-gray-950`}
+            onClick={() => handleThemeChange("yellow")}
+          />
           <button
-            className={`w-8 h-8 rounded-full border-2 bg-gray-500 border-gray-950 `}
-            onClick={() => handleThemeChange("gray")}></button>
+            className={`w-8 h-8 rounded-full border-2 bg-gray-500 border-gray-950`}
+            onClick={() => handleThemeChange("gray")}
+          />
           <button
-            className={`w-8 h-8 rounded-full border-2 bg-black border-gray-950 `}
-            onClick={() => handleThemeChange("black")}></button>
+            className={`w-8 h-8 rounded-full border-2 bg-black border-gray-950`}
+            onClick={() => handleThemeChange("black")}
+          />
+
+          <button
+            className={`w-8 h-8 rounded-full border-2 bg-[#E6E6FA] border-gray-950`}
+            onClick={() => handleThemeChange("lavender")}
+          />
+          <button
+            className={`w-8 h-8 rounded-full border-2 bg-[#F5FFFA] border-gray-950`}
+            onClick={() => handleThemeChange("mint")}
+          />
+          <button
+            className={`w-8 h-8 rounded-full border-2 bg-[#FFDAB9] border-gray-950`}
+            onClick={() => handleThemeChange("peach")}
+          />
+          <button
+            className={`w-8 h-8 rounded-full border-2 bg-[#E1FFFF] border-gray-950`}
+            onClick={() => handleThemeChange("skyblue")}
+          />
+          <button
+            className={`w-8 h-8 rounded-full border-2 bg-[#FFE4E1] border-gray-950`}
+            onClick={() => handleThemeChange("rose")}
+          />
+          <button
+            className={`w-8 h-8 rounded-full border-2 bg-[#FFFDD0] border-gray-950`}
+            onClick={() => handleThemeChange("cream")}
+          />
+          <button
+            className={`w-8 h-8 rounded-full border-2 bg-[#DCD0FF] border-gray-950`}
+            onClick={() => handleThemeChange("lilac")}
+          />
+          <button
+            className={`w-8 h-8 rounded-full border-2 bg-[#E0EEE0] border-gray-950`}
+            onClick={() => handleThemeChange("sage")}
+          />
+          <button
+            className={`w-8 h-8 rounded-full border-2 bg-[#F4E4BC] border-gray-950`}
+            onClick={() => handleThemeChange("sand")}
+          />
+          <button
+            className={`w-8 h-8 rounded-full border-2 bg-[#FFE5D4] border-gray-950`}
+            onClick={() => handleThemeChange("coral")}
+          />
+          <button
+            className={`w-8 h-8 rounded-full border-2 bg-[#708090] border-gray-950`}
+            onClick={() => handleThemeChange("slate")}
+          />
+          <button
+            className={`w-8 h-8 rounded-full border-2 bg-[#4A3C31] border-gray-950`}
+            onClick={() => handleThemeChange("coffee")}
+          />
+          <button
+            className={`w-8 h-8 rounded-full border-2 bg-[#000080] border-gray-950`}
+            onClick={() => handleThemeChange("navy")}
+          />
+          <button
+            className={`w-8 h-8 rounded-full border-2 bg-[#228B22] border-gray-950`}
+            onClick={() => handleThemeChange("forest")}
+          />
+          <button
+            className={`w-8 h-8 rounded-full border-2 bg-[#800020] border-gray-950`}
+            onClick={() => handleThemeChange("burgundy")}
+          />
+          <button
+            className={`w-8 h-8 rounded-full border-2 bg-[#008080] border-gray-950`}
+            onClick={() => handleThemeChange("teal")}
+          />
+          <button
+            className={`w-8 h-8 rounded-full border-2 bg-[#673147] border-gray-950`}
+            onClick={() => handleThemeChange("plum")}
+          />
+          <button
+            className={`w-8 h-8 rounded-full border-2 bg-[#F0E68C] border-gray-950`}
+            onClick={() => handleThemeChange("khaki")}
+          />
+          <button
+            className={`w-8 h-8 rounded-full border-2 bg-[#F0FFFF] border-gray-950`}
+            onClick={() => handleThemeChange("azure")}
+          />
+          <button
+            className={`w-8 h-8 rounded-full border-2 bg-[#E2725B] border-gray-950`}
+            onClick={() => handleThemeChange("terracotta")}
+          />
         </div>
       </div>
 
@@ -338,7 +427,12 @@ export default function DeltaFlyerPage() {
         enable={{ right: previewMode ? false : true }}>
         <div id="post-content" className={`p-6 shadow-md theme-${themeColor}`}>
           <Header title={title} avatarUrl={avatarUrl} author={author} />
-          {showPost && <PostContent postContent={postContent} />}
+          {showPost && (
+            <PostContent
+              postContent={postContent}
+              contentEditable={!previewMode}
+            />
+          )}
           {showSubPost && postscripts.length > 0 && (
             <SubPost postscripts={postscripts} />
           )}

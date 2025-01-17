@@ -1,9 +1,17 @@
-
-export const PostContent = ({ postContent }) => (
-  <>
-    {postContent.length > 0 && (
-      <div className="text-lg leading-relaxed mt-4" dangerouslySetInnerHTML={{ __html: postContent }} />
-    )}
-  </>
-);
-
+export const PostContent = ({ postContent, contentEditable = false }) => {
+  return (
+    <>
+      {postContent.length > 0 && (
+        <div
+          className="text-lg leading-relaxed mt-4"
+          contentEditable={contentEditable}
+          suppressContentEditableWarning={true}
+          dangerouslySetInnerHTML={{ __html: postContent }}
+          onInput={(e) => {
+            const newContent = e.currentTarget.innerHTML
+          }}
+        />
+      )}
+    </>
+  )
+}
