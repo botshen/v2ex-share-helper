@@ -1,7 +1,7 @@
 {
   "name": "v2ex-share",
   "displayName": "v2ex share",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "一个能让你分享高大上的分享V2ex的工具！",
   "author": "botshen",
   "scripts": {
@@ -20,9 +20,9 @@
     "file-saver": "^2.0.5",
     "html-to-image": "^1.11.11",
     "html2canvas": "^1.4.1",
-    "plasmo": "0.88.0",
+    "plasmo": "0.89.4",
     "qrcode.react": "^3.1.0",
-    "re-resizable": "^6.9.16",
+    "re-resizable": "^6.9.17",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-hot-toast": "^2.4.1",

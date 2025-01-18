@@ -7,9 +7,6 @@ export const PostContent = ({ postContent, contentEditable = false }) => {
           contentEditable={contentEditable}
           suppressContentEditableWarning={true}
           dangerouslySetInnerHTML={{ __html: postContent }}
-          onInput={(e) => {
-            const newContent = e.currentTarget.innerHTML
-          }}
         />
       )}
     </>
