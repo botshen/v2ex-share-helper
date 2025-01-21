@@ -149,13 +149,12 @@ export default function DeltaFlyerPage() {
 
         // 预处理所有第三方图片
         const images = element.getElementsByTagName("img")
+        console.log(images)
         for (const img of images) {
-          if (img.getAttribute("rel") === "noreferrer") {
-            const base64Url = await convertImageToBase64(img.src)
-            if (base64Url) {
-              img.src = base64Url
-              img.removeAttribute("rel")
-            }
+          const base64Url = await convertImageToBase64(img.src)
+          if (base64Url) {
+            img.src = base64Url
+            img.removeAttribute("rel")
           }
         }
 

@@ -63,13 +63,39 @@ function cleanHTMLContent(html: string): string {
   const container = document.createElement("div")
   container.innerHTML = html
 
-  // 移除 class 为 small fade 的 span 元素
+  // 处理YouTube视频嵌入
+  const videoWrappers = container.querySelectorAll(".embedded_video_wrapper")
+  videoWrappers.forEach((wrapper) => {
+    const iframe = wrapper.querySelector("iframe")
+    if (iframe && iframe.src) {
+      // 从iframe的src中提取视频ID
+      const videoId = iframe.src.split('/').pop()
+      if (videoId) {
+        // 创建一个包含视频封面的div
+        const thumbnailDiv = document.createElement("div")
+        thumbnailDiv.className = "youtube-thumbnail"
+        thumbnailDiv.innerHTML = `
+          <img src="https://img.youtube.com/vi/${videoId}/maxresdefault.jpg" 
+               alt="YouTube视频封面" 
+               style="width: 100%; border-radius: 8px;"
+          />
+          <div style="text-align: center; margin-top: 8px; color: #666;">
+            🎬 点击查看YouTube视频
+          </div>
+        `
+        // 替换原有的iframe
+        wrapper.innerHTML = ''
+        wrapper.appendChild(thumbnailDiv)
+      }
+    }
+  })
+
+  // 原有的清理代码
   const elementsToRemove = container.querySelectorAll("span.small.fade")
   elementsToRemove.forEach((element) => {
     element.remove()
   })
 
-  // 在 cited_reply 内部，移除 class 为 fr 和 ago 的 div 元素
   const citedReplies = container.querySelectorAll(".cited_reply")
   citedReplies.forEach((citedReply) => {
     const frElements = citedReply.querySelectorAll("div.fr")
